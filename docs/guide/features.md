@@ -20,7 +20,7 @@ import { someMethod } from 'my-dep'
 
 Запросы к зависимостям кэшируются через HTTP-заголовки. Чтобы править зависимость локально, см. [здесь](./dep-pre-bundling#browser-cache).
 
-## Hot Module Replacement (HMR)
+## Горячая замена модулей (HMR)
 
 Поверх нативного ESM доступен [HMR API](./api-hmr). Фреймворки с HMR могут давать мгновенные точечные обновления без перезагрузки страницы и потери состояния. Официальные интеграции: [Vue SFC](https://github.com/vitejs/vite-plugin-vue/tree/main/packages/plugin-vue) и [React Fast Refresh](https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react). Для Preact — [@prefresh/vite](https://github.com/JoviDeCroock/prefresh/tree/main/packages/vite).
 

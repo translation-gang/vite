@@ -13,7 +13,7 @@
 
 Они соответствуют [Baseline Widely Available](https://web-platform-dx.github.io/web-features/) на 2026-01-01, то есть выпущены примерно два с половиной года назад.
 
-## Rolldown
+## Сборщик Rolldown {#rolldown}
 
 Vite 8 использует [Rolldown](https://rolldown.rs/) и инструменты на базе [Oxc](https://oxc.rs/) вместо [esbuild](https://esbuild.github.io/) и [Rollup](https://rollupjs.org/).
 

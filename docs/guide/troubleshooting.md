@@ -4,7 +4,7 @@
 
 Если советы не помогли — [GitHub Discussions](https://github.com/vitejs/vite/discussions) или канал `#help` в [Vite Land Discord](https://chat.vite.dev).
 
-## CLI
+## Командная строка (CLI) {#cli}
 
 ### `Error: Cannot find module 'C:\foo\bar&baz\vite\bin\vite.js'`
 
@@ -15,9 +15,9 @@
 - Другой менеджер пакетов (`pnpm`, `yarn`)
 - Убрать `&` из пути
 
-## Config
+## Конфигурация {#config}
 
-### This package is ESM only
+### Пакет только для ESM {#this-package-is-esm-only}
 
 При импорте ESM-only пакета через `require`:
 
@@ -33,9 +33,9 @@
 - `"type": "module"` в ближайшем `package.json`
 - переименовать `vite.config.js`/`vite.config.ts` в `vite.config.mjs`/`vite.config.mts`
 
-## Dev Server
+## Dev-сервер {#dev-server}
 
-### Requests are stalled forever
+### Запросы навсегда висят {#requests-are-stalled-forever}
 
 На Linux часто упираются в лимиты дескрипторов и inotify. Vite не бандлит большинство файлов, браузер запрашивает много файлов — лимит превышается.
 
@@ -44,19 +44,19 @@
 - Поднять лимит дескрипторов (`ulimit`)
 
   ```shell
-  # Check current limit
+  # Текущий лимит
   $ ulimit -Sn
-  # Change limit (temporary)
-  $ ulimit -Sn 10000 # You might need to change the hard limit too
-  # Restart your browser
+  # Изменить лимит (временно)
+  $ ulimit -Sn 10000 # при необходимости поднимите и жёсткий лимит
+  # Перезапустите браузер
   ```
 
 - Лимиты inotify через `sysctl`
 
   ```shell
-  # Check current limits
+  # Текущие лимиты
   $ sysctl fs.inotify
-  # Change limits (temporary)
+  # Изменить лимиты (временно)
   $ sudo sysctl fs.inotify.max_queued_events=16384
   $ sudo sysctl fs.inotify.max_user_instances=8192
   $ sudo sysctl fs.inotify.max_user_watches=524288
@@ -71,9 +71,9 @@
 
 Настройки сохраняются, нужен **перезапуск**.
 
-Если сервер в VS Code devcontainer, запросы могут «висеть» — см. [Dev Containers / VS Code Port Forwarding](#dev-containers-vs-code-port-forwarding).
+Если сервер в VS Code devcontainer, запросы могут «висеть» — см. [контейнеры разработки и проброс портов VS Code](#dev-containers-vs-code-port-forwarding).
 
-### Vite crashes with ENOSPC error
+### Vite падает с ошибкой ENOSPC {#vite-crashes-with-enospc-error}
 
 На Linux:
 
@@ -86,11 +86,11 @@
 - Увеличить лимит наблюдателей:
 
   ```shell
-  # Check current limit
+  # Текущий лимит
   $ cat /proc/sys/fs/inotify/max_user_watches
-  # Increase limit (temporary)
+  # Увеличить лимит (временно)
   $ sudo sysctl fs.inotify.max_user_watches=524288
-  # Make it permanent - add to /etc/sysctl.conf (or edit if it already exists)
+  # Сделать постоянным — добавить в /etc/sysctl.conf (или править существующий)
   $ echo "fs.inotify.max_user_watches=524288" | sudo tee -a /etc/sysctl.conf
   $ sudo sysctl -p
   ```
@@ -98,13 +98,13 @@
 - Исключить тяжёлые каталоги из watch: [`server.watch.ignored`](/config/server-options#server-watch)
 - Polling: [`server.watch.usePolling`](/config/server-options#server-watch) — выше нагрузка на CPU
 
-### Network requests stop loading
+### Сетевые запросы перестают загружаться {#network-requests-stop-loading}
 
 С самоподписанным SSL Chrome игнорирует кэш-директивы; Vite на них опирается.
 
 Используйте доверенный сертификат.
 
-См. [Cache problems](https://helpx.adobe.com/mt/experience-manager/kb/cache-problems-on-chrome-with-SSL-certificate-errors.html), [Chrome issue](https://bugs.chromium.org/p/chromium/issues/detail?id=110649#c8)
+См. [проблемы с кэшем](https://helpx.adobe.com/mt/experience-manager/kb/cache-problems-on-chrome-with-SSL-certificate-errors.html), [issue в Chrome](https://bugs.chromium.org/p/chromium/issues/detail?id=110649#c8)
 
 #### macOS
 
@@ -116,7 +116,7 @@ security add-trusted-cert -d -r trustRoot -k ~/Library/Keychains/login.keychain-
 
 Или импорт в «Связку ключей» и доверие «Всегда доверять».
 
-### 431 Request Header Fields Too Large
+### 431: слишком большие поля заголовка запроса {#431-request-header-fields-too-large}
 
 Большой HTTP-заголовок — запрос отбрасывается, в логе предупреждение.
 
@@ -126,7 +126,7 @@ Node.js ограничивает размер заголовков из‑за [
 
 Уменьшите заголовки (например, длинные cookie) или задайте [`--max-http-header-size`](https://nodejs.org/api/cli.html#--max-http-header-sizesize).
 
-### Dev Containers / VS Code Port Forwarding
+### Контейнеры разработки и проброс портов VS Code {#dev-containers-vs-code-port-forwarding}
 
 В Dev Container или при port forwarding в VS Code задайте [`server.host`](/config/server-options.md#server-host) в `127.0.0.1`.
 
@@ -134,31 +134,31 @@ Node.js ограничивает размер заголовков из‑за [
 
 Подробнее: [#16522](https://github.com/vitejs/vite/issues/16522).
 
-## HMR
+## HMR {#hmr}
 
-### Vite detects a file change but the HMR is not working
+### Vite видит изменение файла, но HMR не срабатывает {#vite-detects-a-file-change-but-the-hmr-is-not-working}
 
 Возможен разный регистр в импорте. Есть `src/foo.js`, а в `src/bar.js`:
 
 ```js
-import './Foo.js' // should be './foo.js'
+import './Foo.js' // должно быть './foo.js'
 ```
 
 Связанный issue: [#964](https://github.com/vitejs/vite/issues/964)
 
-### Vite does not detect a file change
+### Vite не видит изменение файла {#vite-does-not-detect-a-file-change}
 
 Под WSL2 иногда не срабатывает watch. См. опцию [`server.watch`](/config/server-options.md#server-watch).
 
-### A full reload happens instead of HMR
+### Вместо HMR происходит полная перезагрузка {#a-full-reload-happens-instead-of-hmr}
 
 Если HMR не обрабатывается Vite или плагином — остаётся полная перезагрузка.
 
 Если HMR есть, но есть циклическая зависимость — тоже full reload. Разорвите цикл. Для диагностики: `vite --debug hmr`.
 
-## Build
+## Сборка {#build}
 
-### Built file does not work because of CORS error
+### Собранный файл не работает из‑за ошибки CORS {#built-file-does-not-work-because-of-cors-error}
 
 При открытии HTML через `file://` скрипты не выполнятся:
 
@@ -170,7 +170,7 @@ import './Foo.js' // should be './foo.js'
 
 Открывайте через `http`, например `npx vite preview`.
 
-### No such file or directory error due to case sensitivity
+### Ошибка «файл или каталог не найден» из‑за регистра путей {#no-such-file-or-directory-error-due-to-case-sensitivity}
 
 `ENOENT` / `Module not found` часто из‑за разного регистра ФС: разработка на Windows/macOS (без учёта регистра), сборка на Linux. Проверьте регистр в импортах.
 
@@ -184,7 +184,7 @@ import './Foo.js' // should be './foo.js'
 - Плохая сеть
 - Расширения браузера
 
-#### Version skew
+#### Расхождение версий {#version-skew}
 
 После деплоя старый HTML в кэше ссылается на удалённые чанки.
 
@@ -201,37 +201,37 @@ import './Foo.js' // should be './foo.js'
 - **Префетч динамических чанков** (не поможет, если HTML закэширован по `Cache-Control`)
 - **Обработка ошибки импорта** и перезагрузка страницы. См. [Load Error Handling](./build.md#load-error-handling)
 
-#### Poor network conditions
+#### Плохие сетевые условия {#poor-network-conditions}
 
 Сбои сети или сервера. Повторить динамический импорт в браузере нельзя ([whatwg/html#6768](https://github.com/whatwg/html/issues/6768)).
 
-#### Browser extensions blocking requests
+#### Блокировка запросов расширениями браузера {#browser-extensions-blocking-requests}
 
 Блокировщики и др. могут резать запросы. Иногда помогает смена шаблона имён чанков: [`build.rolldownOptions.output.chunkFileNames`](../config/build-options.md#build-rolldownoptions) (часто режут по подстрокам вроде `ad`, `track`).
 
-## Optimized Dependencies
+## Оптимизированные зависимости {#optimized-dependencies}
 
-### Outdated pre-bundled deps when linking to a local package
+### Устаревший pre-bundle при ссылке на локальный пакет {#outdated-pre-bundled-deps-when-linking-to-a-local-package}
 
 Инвалидация pre-bundle зависит от lockfile, патчей и опций Vite, влияющих на бандл `node_modules`. Переопределения ([npm overrides](https://docs.npmjs.com/cli/v9/configuring-npm/package-json#overrides)) учитываются; [`npm link`](https://docs.npmjs.com/cli/v9/commands/npm-link) — нет: после link/unlink перезапускайте с `vite --force`. Предпочтительнее overrides ([pnpm overrides](https://pnpm.io/9.x/package_json#pnpmoverrides), [yarn resolutions](https://yarnpkg.com/configuration/manifest/#resolutions)).
 
-## Performance Bottlenecks
+## Узкие места производительности {#performance-bottlenecks}
 
 Медленная загрузка — профилируйте встроенным инспектором Node при dev или build:
 
 ::: code-group
 
-```bash [dev server]
+```bash [dev-сервер]
 vite --profile --open
 ```
 
-```bash [build]
+```bash [сборка]
 vite build --profile
 ```
 
 :::
 
-::: tip Vite Dev Server
+::: tip Dev-сервер Vite
 После загрузки страницы в браузере в терминале нажмите `p` (остановка инспектора), затем `q` (остановка dev-сервера).
 :::
 
@@ -239,9 +239,9 @@ vite build --profile
 
 Плагин [vite-plugin-inspect](https://github.com/antfu/vite-plugin-inspect) показывает промежуточное состояние плагинов и узкие места (dev и build). См. readme плагина.
 
-## Others
+## Прочее {#others}
 
-### Module externalized for browser compatibility
+### Модуль вынесен наружу для совместимости с браузером {#module-externalized-for-browser-compatibility}
 
 При использовании Node-модуля в браузере Vite выдаст предупреждение:
 
@@ -251,7 +251,7 @@ Vite не полифилит Node API в браузере.
 
 Лучше не тянуть Node-модули в клиентский код; полифилы — вручную. Если импорт из сторонней библиотеки, ориентированной на браузер — сообщите авторам.
 
-### Syntax Error / Type Error happens
+### Синтаксическая или типовая ошибка {#syntax-error-type-error-happens}
 
 Vite не поддерживает код только для non-strict (sloppy) режима: ESM всегда [strict mode](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode).
 
@@ -263,7 +263,7 @@ Vite не поддерживает код только для non-strict (sloppy
 
 В зависимостях можно попробовать [`patch-package`](https://github.com/ds300/patch-package), [`yarn patch`](https://yarnpkg.com/cli/patch), [`pnpm patch`](https://pnpm.io/cli/patch).
 
-### Browser extensions
+### Расширения браузера {#browser-extensions}
 
 Расширения могут блокировать запросы к dev-серверу Vite — белый экран без явных ошибок или:
 
@@ -271,7 +271,7 @@ Vite не поддерживает код только для non-strict (sloppy
 
 Попробуйте отключить расширения.
 
-### Cross drive links on Windows
+### Ссылки между дисками в Windows {#cross-drive-links-on-windows}
 
 Перекрёстные ссылки между дисками могут ломать Vite:
 
@@ -281,7 +281,7 @@ Vite не поддерживает код только для non-strict (sloppy
 Issue: [#10802](https://github.com/vitejs/vite/issues/10802)
 
 <script setup lang="ts">
-// redirect old links with hash to old version docs
+// перенаправление старых ссылок с хэшем на документацию старых версий
 if (typeof window !== "undefined") {
   const hashForOldVersion = {
     'vite-cjs-node-api-deprecated': 6
@@ -289,7 +289,7 @@ if (typeof window !== "undefined") {
 
   const version = hashForOldVersion[location.hash.slice(1)]
   if (version) {
-    // update the scheme and the port as well so that it works in local preview (it is http and 4173 locally)
+    // обновить схему и порт, чтобы работало в локальном preview (локально http и 4173)
     location.href = `https://v${version}.vite.dev` + location.pathname + location.search + location.hash
   }
 }

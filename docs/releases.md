@@ -47,7 +47,7 @@ import SupportedVersions from './.vitepress/theme/components/SupportedVersions.v
 
 Не-LTS версии Node.js (с нечётным номером) не гоняются в CI Vite, но до своего [EOL](https://endoflife.date/nodejs) обычно должны работать.
 
-## Pre-release
+## Предварительные релизы (pre-release) {#pre-release}
 
 Минорные релизы обычно проходят через переменное число beta-релизов. Мажорные — через фазу alpha и фазу beta.
 

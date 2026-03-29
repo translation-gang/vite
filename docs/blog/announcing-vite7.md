@@ -49,7 +49,7 @@ _24 июня 2025_
 
 Онлайн — [vite.new](https://vite.new); локально — `pnpm create vite`. Подробнее — [Начало работы](/guide/).
 
-Присоединяйтесь к улучшению Vite (уже более [1,1K контрибьюторов ядра](https://github.com/vitejs/vite/graphs/contributors)), зависимостей, плагинов и проектов экосистемы: [Contributing Guide](https://github.com/vitejs/vite/blob/main/CONTRIBUTING.md). Старт: [issues](https://github.com/vitejs/vite/issues), [PR](https://github.com/vitejs/vite/pulls), тестовые PR, [Discussions](https://github.com/vitejs/vite/discussions) или [форум помощи](https://discord.com/channels/804011606160703521/1019670660856942652) Vite Land. Вопросы — [Discord](https://chat.vite.dev), [#contributing](https://discord.com/channels/804011606160703521/804439875226173480).
+Присоединяйтесь к улучшению Vite (уже более [1,1K контрибьюторов ядра](https://github.com/vitejs/vite/graphs/contributors)), зависимостей, плагинов и проектов экосистемы: [Руководство по участию](https://github.com/vitejs/vite/blob/main/CONTRIBUTING.md). Старт: [issues](https://github.com/vitejs/vite/issues), [PR](https://github.com/vitejs/vite/pulls), тестовые PR, [Discussions](https://github.com/vitejs/vite/discussions) или [форум помощи](https://discord.com/channels/804011606160703521/1019670660856942652) Vite Land. Вопросы — [Discord](https://chat.vite.dev), [#contributing](https://discord.com/channels/804011606160703521/804439875226173480).
 
 Новости и сообщество — [Bluesky](https://bsky.app/profile/vite.dev), [X](https://twitter.com/vite_js), [Mastodon](https://webtoo.ls/@vite).
 
@@ -76,7 +76,7 @@ _24 июня 2025_
 
 С Vitest 3.2 поддерживается Vite 7.0. Подробнее — [блог о релизе Vitest 3.2](https://vitest.dev/blog/vitest-3-2.html).
 
-## Environment API
+## API окружений (Environment API)
 
 Vite 6 — крупнейший мажор с Vite 2 благодаря [экспериментальному Environment API](https://vite.dev/blog/announcing-vite6.html#experimental-environment-api). API остаются экспериментальными, пока экосистема оценивает применимость. Если вы строите на Vite — протестируйте API и пишите в [открытое обсуждение с фидбеком](https://github.com/vitejs/vite/discussions/16358).
 

@@ -273,7 +273,7 @@ export function mySSRPlugin() {
 
 По умолчанию для SSR используются [`resolve.conditions`](../config/shared-options.md#resolve-conditions). Настройка: [`ssr.resolve.conditions`](../config/ssr-options.md#ssr-resolve-conditions) и [`ssr.resolve.externalConditions`](../config/ssr-options.md#ssr-resolve-externalconditions).
 
-## CLI Vite
+## Командная строка Vite (CLI)
 
 `vite dev` и `vite preview` применимы к SSR. SSR-middleware к dev-серверу — [`configureServer`](/guide/api-plugin#configureserver), к preview — [`configurePreviewServer`](/guide/api-plugin#configurepreviewserver).
 

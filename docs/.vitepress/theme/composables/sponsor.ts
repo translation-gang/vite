@@ -16,7 +16,7 @@ interface Sponsors {
   bronze: Sponsor[]
 }
 
-// shared data across instances so we load only once.
+// общие данные между экземплярами — загружаем один раз
 const data = ref<SponsorTier[]>()
 
 const dataHost = 'https://sponsors.vuejs.org'
@@ -30,13 +30,13 @@ export const voidZero = {
 
 const viteSponsors: Pick<Sponsors, 'special' | 'gold'> = {
   special: [
-    // sponsors patak-dev
+    // спонсор patak-dev
     {
       name: 'Bolt',
       url: 'https://bolt.new',
       img: boltSvg,
     },
-    // sponsors antfu
+    // спонсор antfu
     {
       name: 'NuxtLabs',
       url: 'https://nuxtlabs.com',
@@ -44,7 +44,7 @@ const viteSponsors: Pick<Sponsors, 'special' | 'gold'> = {
     },
   ],
   gold: [
-    // now automated via sponsors.vuejs.org too
+    // также подтягивается с sponsors.vuejs.org
   ],
 }
 

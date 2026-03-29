@@ -12,10 +12,10 @@ import llmstxt from 'vitepress-plugin-llms'
 import { markdownItImageSize } from 'markdown-it-image-size'
 import { extendConfig } from '@voidzero-dev/vitepress-theme/config'
 import type { FooterLink } from '@voidzero-dev/vitepress-theme'
-import packageJson from '../../packages/vite/package.json' with { type: 'json' }
+import vitePackageJson from 'vite/package.json' with { type: 'json' }
 import { buildEnd } from './buildEnd.config'
 
-const viteVersion = packageJson.version
+const viteVersion = vitePackageJson.version
 const viteMajorVersion = +viteVersion.split('.')[0]
 
 const ogDescription = 'Next Generation Frontend Tooling'
@@ -147,8 +147,8 @@ const config = defineConfig({
     },
 
     editLink: {
-      pattern: 'https://github.com/vitejs/vite/edit/main/docs/:path',
-      text: 'Suggest changes to this page',
+      pattern: 'https://github.com/translation-gang/vite/edit/main/docs/:path',
+      text: 'Предложить правки к этой странице',
     },
 
     socialLinks: [
@@ -165,8 +165,48 @@ const config = defineConfig({
         appId: '7H67QR5P0A',
         apiKey: '208bb9c14574939326032b937431014b',
         indexName: 'vitejs',
+        // Должно совпадать с facet `tags` в индексе Algolia DocSearch для этого сайта (см. .github/CONTRIBUTING.md).
+        placeholder: 'Поиск по документации',
         searchParameters: {
           facetFilters: ['tags:en'],
+        },
+        translations: {
+          button: {
+            buttonText: 'Поиск',
+            buttonAriaLabel: 'Поиск по документации',
+          },
+          modal: {
+            searchBox: {
+              resetButtonTitle: 'Сбросить запрос',
+              resetButtonAriaLabel: 'Сбросить запрос',
+              cancelButtonText: 'Отмена',
+              cancelButtonAriaLabel: 'Отмена',
+            },
+            footer: {
+              selectText: 'выбрать',
+              navigateText: 'навигация',
+              closeText: 'закрыть',
+              searchByText: 'Поиск',
+            },
+            startScreen: {
+              recentSearchesTitle: 'Недавние',
+              noRecentSearchesText: 'Нет недавних запросов',
+              saveRecentSearchButtonTitle: 'Сохранить этот запрос',
+              removeRecentSearchButtonTitle: 'Удалить из недавних',
+              favoriteSearchesTitle: 'Избранное',
+              removeFavoriteSearchButtonTitle: 'Удалить из избранного',
+            },
+            errorScreen: {
+              titleText: 'Не удалось получить результаты',
+              helpText: 'Проверьте подключение к сети.',
+            },
+            noResultsScreen: {
+              noResultsText: 'Ничего не найдено по запросу',
+              suggestedQueryText: 'Попробуйте другой запрос',
+              reportMissingResultsText: 'Считаете, что поиск неполный?',
+              reportMissingResultsLinkText: 'Сообщите об этом.',
+            },
+          },
         },
         insights: true,
       },

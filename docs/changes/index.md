@@ -1,26 +1,26 @@
-# Критические изменения
+# Breaking Changes
 
-Список критических изменений в Vite: отказы от API, удаления и изменения. Большинство перечисленных ниже изменений можно включить через опцию [`future`](/config/shared-options.html#future) в конфигурации Vite.
+List of breaking changes in Vite including API deprecations, removals, and changes. Most of the changes below can be opt-in using the [`future` option](/config/shared-options.html#future) in your Vite config.
 
-## Запланированы
+## Planned
 
-Эти изменения запланированы на следующую мажорную версию Vite. Предупреждения об устаревании или использовании подскажут, где это возможно; мы также связываемся с авторами фреймворков и плагинов и с пользователями, чтобы эти изменения были применены.
+These changes are planned for the next major version of Vite. The deprecation or usage warnings will guide you where possible, and we're reaching out to framework, plugin authors, and users to apply these changes.
 
-- [`this.environment` в хуках](/changes/this-environment-in-hooks)
-- [Плагинный хук HMR `hotUpdate`](/changes/hotupdate-hook)
-- [SSR с API `ModuleRunner`](/changes/ssr-using-modulerunner)
+- [`this.environment` in Hooks](/changes/this-environment-in-hooks)
+- [HMR `hotUpdate` Plugin Hook](/changes/hotupdate-hook)
+- [SSR Using `ModuleRunner` API](/changes/ssr-using-modulerunner)
 
-## На рассмотрении
+## Considering
 
-Эти изменения находятся на рассмотрении; часто это экспериментальные API, призванные улучшить текущие паттерны использования. Поскольку здесь перечислены не все изменения, смотрите полный список в [разделе Experimental в обсуждениях Vite на GitHub](https://github.com/vitejs/vite/discussions/categories/feedback?discussions_q=label%3Aexperimental+category%3AFeedback).
+These changes are being considered and are often experimental APIs that intend to improve upon current usage patterns. As not all changes are listed here, please check out the [Experimental Label in Vite GitHub Discussions](https://github.com/vitejs/vite/discussions/categories/feedback?discussions_q=label%3Aexperimental+category%3AFeedback) for the full list.
 
-Мы пока не рекомендуем переходить на эти API. Они включены в Vite, чтобы собирать обратную связь. Ознакомьтесь с предложениями и расскажите в привязанных обсуждениях на GitHub, как они работают в вашем сценарии.
+We don't recommend switching to these APIs yet. They are included in Vite to help us gather feedback. Please check these proposals and let us know how they work in your use case in each's linked GitHub Discussions.
 
-- [Переход к API для каждой среды](/changes/per-environment-apis)
-- [Общие плагины во время сборки](/changes/shared-plugins-during-build)
+- [Move to Per-environment APIs](/changes/per-environment-apis)
+- [Shared Plugins During Build](/changes/shared-plugins-during-build)
 
-## Прошлые
+## Past
 
-Изменения ниже уже внесены или отменены. В текущей мажорной версии они больше не актуальны.
+The changes below have been done or reverted. They are no longer relevant in the current major version.
 
-- _Пока нет прошлых изменений_
+- _No past changes yet_

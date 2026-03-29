@@ -10,11 +10,11 @@ import viteAnimation from '@assets/vite/animations/563_x_420_rich_features.riv'
     <div class="flex flex-col gap-3 justify-between">
       <div class="p-5 sm:p-10 flex flex-col gap-3">
         <h5 class="text-balance sm:text-pretty text-white">
-          Мгновенный старт сервера
+          Instant Server Start
         </h5>
         <p class="sm:max-w-[28rem] text-pretty">
-          Раздача исходников по требованию через нативные ESM и очень быстрая
-          предсборка зависимостей.
+          On demand source file serving over native ESM, with blazing fast
+          dependency pre-bundling.
         </p>
       </div>
       <div class="relative p-10 sm:p-15 flex justify-center bg-[#370a7f]">
@@ -30,7 +30,7 @@ import viteAnimation from '@assets/vite/animations/563_x_420_rich_features.riv'
           src="@assets/vite/vite-featurepanel-1-terminal.svg"
           width="493"
           height="230"
-          alt="Терминал"
+          alt="Terminal"
           inert
           loading="lazy"
         />
@@ -39,10 +39,9 @@ import viteAnimation from '@assets/vite/animations/563_x_420_rich_features.riv'
 
     <div class="flex flex-col gap-3 justify-between border-r-0">
       <div class="p-5 sm:p-10 flex flex-col gap-3">
-        <h5 class="text-white">Молниеносный HMR</h5>
+        <h5 class="text-white">Lightning Fast HMR</h5>
         <p class="max-w-[26rem] text-pretty">
-          Изменения сразу видны при сохранении — каким бы большим ни было
-          приложение.
+          Instantly reflect changes as you save, no matter how big your app is.
         </p>
       </div>
       <div class="flex justify-end">
@@ -53,16 +52,16 @@ import viteAnimation from '@assets/vite/animations/563_x_420_rich_features.riv'
           class="md:max-w-[80%]"
           inert
           loading="lazy"
-          alt="очень быстрый hot module replacement"
+          alt="lightning fast hot module replacement"
         />
       </div>
     </div>
 
     <div class="p-5 sm:p-10 pb-0 sm:pb-0 flex flex-col gap-3 lg:border-b-0">
-      <h5 class="text-white">Богатые возможности из коробки</h5>
+      <h5 class="text-white">Rich Features Out of the Box</h5>
       <p class="sm:max-w-[28rem] text-pretty">
-        TypeScript, JSX, CSS, Workers, WebAssembly… и ещё больше — буквально
-        одним плагином.
+        TypeScript, JSX, CSS, Workers, WebAssembly... and more just a plugin
+        away.
       </p>
       <RiveAnimation
         :desktop-src="viteAnimation"
@@ -77,10 +76,10 @@ import viteAnimation from '@assets/vite/animations/563_x_420_rich_features.riv'
 
     <div class="flex flex-col gap-3 justify-between border-r-0 border-b-0">
       <div class="p-5 sm:p-10 flex flex-col gap-3">
-        <h5 class="text-white">Оптимизированная сборка</h5>
+        <h5 class="text-white">Optimized Build</h5>
         <p class="max-w-[25rem] text-pretty">
-          Продвинутый tree-shaking, встроенная минификация и тонкий контроль
-          чанков на базе Rolldown.
+          Advanced tree-shaking, built-in minification, fine-grained chunking
+          control powered by Rolldown.
         </p>
       </div>
       <div class="relative p-10 sm:p-15 flex justify-center bg-[#370a7f]">
@@ -98,7 +97,7 @@ import viteAnimation from '@assets/vite/animations/563_x_420_rich_features.riv'
           height="209"
           inert
           loading="lazy"
-          alt="оптимизированная сборка"
+          alt="optimized build"
         />
       </div>
     </div>

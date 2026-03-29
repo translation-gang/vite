@@ -1,40 +1,40 @@
-# API окружений (Environment API)
+# Environment API
 
-:::info Кандидат на релиз
-Environment API в целом находится в фазе кандидата на релиз. Мы будем поддерживать стабильность API между мажорными релизами, чтобы экосистема могла экспериментировать и строить на их основе. Однако имейте в виду, что [некоторые конкретные API](/changes/#considering) всё ещё считаются экспериментальными.
+:::info Release Candidate
+The Environment API is generally in the release candidate phase. We'll maintain stability in the APIs between major releases to allow the ecosystem to experiment and build upon them. However, note that [some specific APIs](/changes/#considering) are still considered experimental.
 
-Мы планируем стабилизировать эти новые API (с возможными breaking changes) в будущем мажорном релизе, когда даунстрим-проекты успеют поэкспериментировать с новыми возможностями и проверить их.
+We plan to stabilize these new APIs (with potential breaking changes) in a future major release once downstream projects have had time to experiment with the new features and validate them.
 
-Материалы:
+Resources:
 
-- [Обсуждение и обратная связь](https://github.com/vitejs/vite/discussions/16358), где мы собираем отзывы о новых API.
-- [PR Environment API](https://github.com/vitejs/vite/pull/16471), где новые API были реализованы и ревьюились.
+- [Feedback discussion](https://github.com/vitejs/vite/discussions/16358) where we are gathering feedback about the new APIs.
+- [Environment API PR](https://github.com/vitejs/vite/pull/16471) where the new APIs were implemented and reviewed.
 
-Поделитесь с нами своей обратной связью.
+Please share your feedback with us.
 :::
 
-## Формализация окружений
+## Formalizing Environments
 
-Vite 6 формализует концепцию окружений (Environments). До Vite 5 существовали два неявных окружения (`client` и при необходимости `ssr`). Новый Environment API позволяет пользователям и авторам фреймворков создавать столько окружений, сколько нужно, чтобы отразить, как приложение работает в продакшене. Для этой возможности потребовался большой внутренний рефакторинг, но много сил уделено обратной совместимости. Первоначальная цель Vite 6 — максимально плавно перевести экосистему на новый мажор, отложив активное использование API до тех пор, пока достаточно пользователей не мигрирует, а фреймворки и авторы плагинов не подтвердят новый дизайн.
+Vite 6 formalizes the concept of Environments. Until Vite 5, there were two implicit Environments (`client`, and optionally `ssr`). The new Environment API allows users and framework authors to create as many environments as needed to map the way their apps work in production. This new capability required a big internal refactoring, but a lot of effort has been placed on backward compatibility. The initial goal of Vite 6 is to move the ecosystem to the new major as smoothly as possible, delaying the adoption of the APIs until enough users have migrated and frameworks and plugin authors have validated the new design.
 
-## Сближение сборки и разработки
+## Closing the Gap Between Build and Dev
 
-Для простого SPA/MPA новые API вокруг окружений в конфиг не выставляются. Внутри Vite применяет опции к окружению `client`, но при настройке Vite знать об этой концепции не обязательно. Конфиг и поведение как в Vite 5 здесь должны работать без сбоев.
+For a simple SPA/MPA, no new APIs around environments are exposed to the config. Internally, Vite will apply the options to a `client` environment, but it's not necessary to know of this concept when configuring Vite. The config and behavior from Vite 5 should work seamlessly here.
 
-У типичного приложения с рендерингом на сервере (SSR) будет два окружения:
+When we move to a typical server-side rendered (SSR) app, we'll have two environments:
 
-- `client`: выполняет приложение в браузере.
-- `ssr`: выполняет приложение в Node (или других серверных рантаймах), который рендерит страницы до отправки в браузер.
+- `client`: runs the app in the browser.
+- `ssr`: runs the app in node (or other server runtimes) which renders pages before sending them to the browser.
 
-В режиме разработки Vite выполняет серверный код в том же процессе Node, что и dev-сервер Vite, что даёт близкое приближение к продакшен-окружению. Однако серверы могут работать и в других JS-рантаймах, например в [workerd от Cloudflare](https://github.com/cloudflare/workerd), с иными ограничениями. Современные приложения могут работать более чем в двух окружениях — например, браузер, Node-сервер и edge-сервер. Vite 5 не позволял корректно моделировать такие окружения.
+In dev, Vite executes the server code in the same Node process as the Vite dev server, giving a close approximation to the production environment. However, it is also possible for servers to run in other JS runtimes, like [Cloudflare's workerd](https://github.com/cloudflare/workerd) which have different constraints. Modern apps may also run in more than two environments, e.g. a browser, a node server, and an edge server. Vite 5 didn't allow to properly represent these environments.
 
-Vite 6 позволяет настраивать приложение при сборке и в dev так, чтобы отразить все его окружения. В dev один dev-сервер Vite может одновременно выполнять код в нескольких разных окружениях. Исходный код приложения по-прежнему трансформируется dev-сервером Vite. Поверх общего HTTP-сервера, middleware, резолвнутого конфига и пайплайна плагинов у dev-сервера Vite теперь есть набор независимых dev-окружений. Каждое настроено максимально близко к продакшену и подключено к dev-рантайму, где выполняется код (для workerd серверный код может локально работать в miniflare). В клиенте браузер импортирует и выполняет код. В других окружениях module runner запрашивает и выполняет трансформированный код.
+Vite 6 allows users to configure their app during build and dev to map all of its environments. During dev, a single Vite dev server can now be used to run code in multiple different environments concurrently. The app source code is still transformed by Vite dev server. On top of the shared HTTP server, middlewares, resolved config, and plugins pipeline, the Vite dev server now has a set of independent dev environments. Each of them is configured to match the production environment as closely as possible, and is connected to a dev runtime where the code is executed (for workerd, the server code can now run in miniflare locally). In the client, the browser imports and executes the code. In other environments, a module runner fetches and evaluates the transformed code.
 
-![Окружения Vite](../images/vite-environments.svg)
+![Vite Environments](../images/vite-environments.svg)
 
-## Настройка окружений
+## Environments Configuration
 
-Для SPA/MPA конфигурация будет похожа на Vite 5. Внутри эти опции используются для настройки окружения `client`.
+For an SPA/MPA, the configuration will look similar to Vite 5. Internally these options are used to configure the `client` environment.
 
 ```js
 export default defineConfig({
@@ -47,9 +47,9 @@ export default defineConfig({
 })
 ```
 
-Это важно: мы хотим, чтобы Vite оставался доступным, и не выставляли новые концепции, пока они не нужны.
+This is important because we'd like to keep Vite approachable and avoid exposing new concepts until they are needed.
 
-Если приложение состоит из нескольких окружений, их можно явно задать опцией конфига `environments`.
+If the app is composed of several environments, then these environments can be configured explicitly with the `environments` config option.
 
 ```js
 export default {
@@ -70,9 +70,9 @@ export default {
 }
 ```
 
-Если не сказано иное, окружение наследует настроенные опции верхнего уровня (например, новые окружения `server` и `edge` унаследуют `build.sourcemap: false`). Небольшая часть опций верхнего уровня, таких как `optimizeDeps`, применяется только к окружению `client`, так как плохо работают как значение по умолчанию для серверных окружений. У таких опций в [справочнике](/config/) есть бейдж <NonInheritBadge />. Окружение `client` можно также настроить явно через `environments.client`, но мы рекомендуем использовать опции верхнего уровня, чтобы конфиг клиента не менялся при добавлении новых окружений.
+When not explicitly documented, environment inherits the configured top-level config options (for example, the new `server` and `edge` environments will inherit the `build.sourcemap: false` option). A small number of top-level options, like `optimizeDeps`, only apply to the `client` environment, as they don't work well when applied as a default to server environments. Those options have <NonInheritBadge /> badge in [the reference](/config/). The `client` environment can also be configured explicitly through `environments.client`, but we recommend to do it with the top-level options so the client config remains unchanged when adding new environments.
 
-Интерфейс `EnvironmentOptions` описывает все опции, задаваемые на уровне окружения. Есть опции, относящиеся и к `build`, и к `dev`, например `resolve`. А также `DevEnvironmentOptions` и `BuildEnvironmentOptions` для специфичных для dev и build опций (например `dev.warmup` или `build.outDir`). Некоторые опции вроде `optimizeDeps` относятся только к dev, но остаются на верхнем уровне, а не внутри `dev`, ради обратной совместимости.
+The `EnvironmentOptions` interface exposes all the per-environment options. There are environment options that apply to both `build` and `dev`, like `resolve`. And there are `DevEnvironmentOptions` and `BuildEnvironmentOptions` for dev and build specific options (like `dev.warmup` or `build.outDir`). Some options like `optimizeDeps` only applies to dev, but is kept as top level instead of nested in `dev` for backward compatibility.
 
 ```ts
 interface EnvironmentOptions {
@@ -85,7 +85,7 @@ interface EnvironmentOptions {
 }
 ```
 
-Интерфейс `UserConfig` расширяет `EnvironmentOptions` и позволяет настроить клиент и значения по умолчанию для других окружений через опцию `environments`. Окружения `client` и серверное с именем `ssr` всегда присутствуют в dev. Это сохраняет обратную совместимость с `server.ssrLoadModule(url)` и `server.moduleGraph`. При сборке окружение `client` всегда есть, а `ssr` — только если оно явно настроено (через `environments.ssr` или для совместимости `build.ssr`). Приложению не обязательно называть SSR-окружение `ssr` — можно, например, `server`.
+The `UserConfig` interface extends from the `EnvironmentOptions` interface, allowing to configure the client and defaults for other environments, configured through the `environments` option. The `client` and a server environment named `ssr` are always present during dev. This allows backward compatibility with `server.ssrLoadModule(url)` and `server.moduleGraph`. During build, the `client` environment is always present, and the `ssr` environment is only present if it is explicitly configured (using `environments.ssr` or for backward compatibility `build.ssr`). An app doesn't need to use the `ssr` name for its SSR environment, it could name it `server` for example.
 
 ```ts
 interface UserConfig extends EnvironmentOptions {
@@ -94,13 +94,13 @@ interface UserConfig extends EnvironmentOptions {
 }
 ```
 
-Имейте в виду: свойство верхнего уровня `ssr` будет помечено устаревшим после стабилизации Environment API. Оно выполняет ту же роль, что и `environments`, но только для окружения `ssr` по умолчанию и позволяет задать ограниченный набор опций.
+Note that the `ssr` top-level property is going to be deprecated once the Environment API is stable. This option has the same role as `environments`, but for the default `ssr` environment and only allowed configuring of a small set of options.
 
-## Пользовательские экземпляры окружений
+## Custom Environment Instances
 
-Доступны низкоуровневые API конфигурации, чтобы провайдеры рантаймов могли предлагать окружения с корректными умолчанями для своих рантаймов. Такие окружения могут также порождать другие процессы или потоки для выполнения модулей в dev в рантайме, ближе к продакшену.
+Low level configuration APIs are available so runtime providers can provide environments with proper defaults for their runtimes. These environments can also spawn other processes or threads to run the modules during dev in a closer runtime to the production environment.
 
-Например, [плагин Cloudflare Vite](https://developers.cloudflare.com/workers/vite-plugin/) использует Environment API для выполнения кода в рантайме Cloudflare Workers (`workerd`) во время разработки.
+For example, the [Cloudflare Vite plugin](https://developers.cloudflare.com/workers/vite-plugin/) uses the Environment API to run code in the Cloudflare Workers runtime (`workerd`) during development.
 
 ```js
 import { customEnvironment } from 'vite-environment-provider'
@@ -119,26 +119,26 @@ export default {
 }
 ```
 
-## Обратная совместимость
+## Backward Compatibility
 
-Текущий API сервера Vite ещё не помечен устаревшим и совместим с Vite 5.
+The current Vite server API is not yet deprecated and is backward compatible with Vite 5.
 
-`server.moduleGraph` возвращает смешанное представление графов модулей client и ssr. Из всех его методов возвращаются узлы модулей, совместимые со старым API. Та же схема используется для узлов модулей, передаваемых в `handleHotUpdate`.
+The `server.moduleGraph` returns a mixed view of the client and ssr module graphs. Backward compatible mixed module nodes will be returned from all its methods. The same scheme is used for the module nodes passed to `handleHotUpdate`.
 
-Мы пока не рекомендуем переходить на Environment API. Рассчитываем, что значительная часть пользователей перейдёт на Vite 6 раньше, чтобы плагинам не пришлось поддерживать две версии. Раздел о будущих breaking changes и пути миграции:
+We don't recommend switching to Environment API yet. We are aiming for a good portion of the user base to adopt Vite 6 before so plugins don't need to maintain two versions. Checkout the future breaking changes section for information on future deprecations and upgrade path:
 
-- [`this.environment` в хуках](/changes/this-environment-in-hooks)
-- [Плагинный хук HMR `hotUpdate`](/changes/hotupdate-hook)
-- [Переход к per-environment API](/changes/per-environment-apis)
-- [SSR с API `ModuleRunner`](/changes/ssr-using-modulerunner)
-- [Общие плагины при сборке](/changes/shared-plugins-during-build)
+- [`this.environment` in Hooks](/changes/this-environment-in-hooks)
+- [HMR `hotUpdate` Plugin Hook](/changes/hotupdate-hook)
+- [Move to Per-environment APIs](/changes/per-environment-apis)
+- [SSR Using `ModuleRunner` API](/changes/ssr-using-modulerunner)
+- [Shared Plugins During Build](/changes/shared-plugins-during-build)
 
-## Целевая аудитория
+## Target Users
 
-В этом руководстве — базовые концепции окружений для конечных пользователей.
+This guide provides the basic concepts about environments for end users.
 
-Авторам плагинов доступен более единообразный API для работы с конфигурацией текущего окружения. Если вы строите решение поверх Vite, в [руководстве Environment API для плагинов](./api-environment-plugins.md) описано, как расширенные API плагинов поддерживают несколько пользовательских окружений.
+Plugin authors have a more consistent API available to interact with the current environment configuration. If you're building on top of Vite, the [Environment API Plugins Guide](./api-environment-plugins.md) guide describes the way extended plugin APIs available to support multiple custom environments.
 
-Фреймворки могут выставлять окружения на разных уровнях. Если вы автор фреймворка, продолжайте с [руководством Environment API для фреймворков](./api-environment-frameworks), чтобы узнать о программной стороне Environment API.
+Frameworks could decide to expose environments at different levels. If you're a framework author, continue reading the [Environment API Frameworks Guide](./api-environment-frameworks) to learn about the Environment API programmatic side.
 
-Для провайдеров рантаймов в [руководстве Environment API для рантаймов](./api-environment-runtimes.md) объясняется, как предлагать пользовательские окружения для фреймворков и пользователей.
+For Runtime providers, the [Environment API Runtimes Guide](./api-environment-runtimes.md) explains how to offer custom environments to be consumed by frameworks and users.

@@ -1,30 +1,30 @@
-# Опции worker
+# Worker Options
 
-Если не указано иное, опции этого раздела применяются к dev, build и preview.
+Unless noted, the options in this section are applied to all dev, build, and preview.
 
 ## worker.format
 
-- **Тип:** `'es' | 'iife'`
-- **По умолчанию:** `'iife'`
+- **Type:** `'es' | 'iife'`
+- **Default:** `'iife'`
 
-Формат вывода бандла воркера.
+Output format for worker bundle.
 
 ## worker.plugins
 
-- **Тип:** [`() => (Plugin | Plugin[])[]`](./shared-options#plugins)
+- **Type:** [`() => (Plugin | Plugin[])[]`](./shared-options#plugins)
 
-Плагины Vite для бандлов воркеров. [config.plugins](./shared-options#plugins) в dev для воркеров недостаточно — для build настраивайте здесь.
-Функция должна возвращать новые экземпляры плагинов (параллельные сборки воркеров через rolldown). Изменение `config.worker` в хуке `config` не учитывается.
+Vite plugins that apply to the worker bundles. Note that [config.plugins](./shared-options#plugins) only applies to workers in dev, it should be configured here instead for build.
+The function should return new plugin instances as they are used in parallel rolldown worker builds. As such, modifying `config.worker` options in the `config` hook will be ignored.
 
 ## worker.rolldownOptions
 
-- **Тип:** [`RolldownOptions`](https://rolldown.rs/reference/)
+- **Type:** [`RolldownOptions`](https://rolldown.rs/reference/)
 
-Опции Rolldown для сборки бандла воркера.
+Rolldown options to build worker bundle.
 
 ## worker.rollupOptions
 
-- **Тип:** `RolldownOptions`
-- **Устарело**
+- **Type:** `RolldownOptions`
+- **Deprecated**
 
-Псевдоним опции `worker.rolldownOptions`. Используйте `worker.rolldownOptions`.
+This option is an alias of `worker.rolldownOptions` option. Use `worker.rolldownOptions` option instead.

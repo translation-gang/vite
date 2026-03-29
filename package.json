@@ -2,7 +2,7 @@
   "name": "vite-docs-template",
   "version": "1.0.0",
   "type": "module",
-  "description": "Vite docs template",
+  "description": "Шаблон репозитория документации Vite",
   "main": "docs/index.md",
   "directories": {
     "doc": "docs"

@@ -9,11 +9,11 @@ import flexiblePluginAnimation from '@assets/vite/animations/640_x_300_flexible_
   >
     <div class="p-5 sm:p-10 flex flex-col gap-3">
       <h5 class="text-balance sm:text-pretty text-white">
-        Flexible Plugin System
+        Гибкая система плагинов
       </h5>
       <p class="sm:max-w-[28rem] text-pretty">
-        Vite plugins extends Rollup's well-designed plugin interface with a few
-        extra Vite-specific options.
+        Плагины Vite расширяют продуманный интерфейс Rollup несколькими
+        дополнительными опциями, специфичными для Vite.
       </p>
       <RiveAnimation
         :desktop-src="flexiblePluginAnimation"
@@ -25,8 +25,8 @@ import flexiblePluginAnimation from '@assets/vite/animations/640_x_300_flexible_
 
     <div class="flex flex-col gap-3 border-r-0 justify-between">
       <div class="p-5 sm:p-10 flex flex-col gap-3">
-        <h5 class="text-white">Fully Typed API</h5>
-        <p class="max-w-[26rem] text-pretty">Designed to be built on top of.</p>
+        <h5 class="text-white">Полностью типизированное API</h5>
+        <p class="max-w-[26rem] text-pretty">Создано, чтобы на нём строить.</p>
       </div>
       <div class="relative p-5 sm:p-10 flex justify-center bg-[#370a7f]">
         <img
@@ -43,22 +43,22 @@ import flexiblePluginAnimation from '@assets/vite/animations/640_x_300_flexible_
           height="252"
           inert
           loading="lazy"
-          alt="typed api"
+          alt="типизированное API"
         />
       </div>
     </div>
 
     <div class="p-5 sm:p-10 flex flex-col gap-3 lg:border-b-0">
-      <h5 class="text-white">First class SSR Support</h5>
+      <h5 class="text-white">Полноценная поддержка SSR</h5>
       <p class="sm:max-w-[28rem] text-pretty mb-12 sm:mb-16">
-        It's never been easier to setup custom SSR (Server-Side Rendering), or
-        build your own SSR framework.
+        Настроить свой SSR (Server-Side Rendering) или собрать свой SSR-фреймворк
+        ещё никогда не было так просто.
       </p>
       <img
         src="@assets/vite/vite-ssr-support.png"
         width="1008"
         height="466"
-        alt="SSR Support"
+        alt="поддержка SSR"
         loading="lazy"
         class="w-full px-5"
       />
@@ -66,10 +66,10 @@ import flexiblePluginAnimation from '@assets/vite/animations/640_x_300_flexible_
 
     <div class="flex flex-col gap-3 justify-between">
       <div class="p-5 sm:p-10 flex flex-col gap-3">
-        <h5 class="text-white">Continuous ecosystem integration</h5>
+        <h5 class="text-white">Непрерывная интеграция с экосистемой</h5>
         <p class="max-w-[25rem] text-pretty">
-          Our CI continuously tests Vite changes against downstream projects,
-          allowing us to improve Vite with stability and confidence.
+          Наш CI постоянно прогоняет изменения Vite на даунстрим-проектах — так мы
+          улучшаем Vite стабильно и уверенно.
         </p>
       </div>
       <div class="px-5 sm:px-10 flex justify-center">
@@ -79,7 +79,7 @@ import flexiblePluginAnimation from '@assets/vite/animations/640_x_300_flexible_
           height="272"
           inert
           loading="lazy"
-          alt="continuous ecosystem integration"
+          alt="непрерывная интеграция с экосистемой"
         />
       </div>
     </div>

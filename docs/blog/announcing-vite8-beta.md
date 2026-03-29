@@ -1,7 +1,7 @@
 ---
-title: 'Vite 8 Beta: The Rolldown-powered Vite'
+title: 'Vite 8 Beta: Vite на Rolldown'
 author:
-  name: The Vite Team
+  name: Команда Vite
 date: 2025-12-03
 sidebar: false
 head:
@@ -10,7 +10,7 @@ head:
       content: website
   - - meta
     - property: og:title
-      content: Announcing Vite 8 Beta
+      content: Анонс Vite 8 Beta
   - - meta
     - property: og:image
       content: https://vite.dev/og-image-announcing-vite8-beta.webp
@@ -19,78 +19,78 @@ head:
       content: https://vite.dev/blog/announcing-vite8-beta
   - - meta
     - property: og:description
-      content: Vite 8 Beta Release Announcement
+      content: Анонс бета-релиза Vite 8
   - - meta
     - name: twitter:card
       content: summary_large_image
 ---
 
-# Vite 8 Beta: The Rolldown-powered Vite
+# Vite 8 Beta: Vite на Rolldown
 
-_December 3, 2025_
+_3 декабря 2025_
 
-![Vite 8 Beta Announcement Cover Image](/og-image-announcing-vite8-beta.webp)
+![Обложка анонса Vite 8 Beta](/og-image-announcing-vite8-beta.webp)
 
-TL;DR: The first beta of Vite 8, powered by [Rolldown](https://rolldown.rs/), is now available. Vite 8 ships significantly faster production builds and unlocks future improvement possibilities. You can try the new release by upgrading `vite` to version `8.0.0-beta.0` and reading the [migration guide](/guide/migration).
+Кратко: доступна первая бета Vite 8 на [Rolldown](https://rolldown.rs/). Значительно быстрее production-сборки и задел на будущие улучшения. Попробовать: обновить `vite` до `8.0.0-beta.0` и прочитать [руководство по миграции](/guide/migration).
 
 ---
 
-We're excited to release the first beta of Vite 8. This release unifies the underlying toolchain and brings better consistent behaviors, alongside significant build performance improvements. Vite now uses [Rolldown](https://rolldown.rs/) as its bundler, replacing the previous combination of esbuild and Rollup.
+Рады выпустить первую бету Vite 8. Релиз объединяет нижележащий toolchain, выравнивает поведение и сильно ускоряет сборку. Бандлером Vite теперь служит [Rolldown](https://rolldown.rs/) вместо связки esbuild и Rollup.
 
-## A new bundler for the web
+## Новый бандлер для веба
 
-Vite previously relied on two bundlers to meet differing requirements for development and production builds:
+Раньше Vite опирался на два бандлера под разные задачи:
 
-1. esbuild for fast compilation during development
-2. Rollup for bundling, chunking, and optimizing production builds
+1. esbuild — быстрая компиляция в dev
+2. Rollup — бандлинг, чанки и оптимизация production
 
-This approach lets Vite focus on developer experience and orchestration instead of reinventing parsing and bundling. However, maintaining two separate bundling pipelines introduced inconsistencies: separate transformation pipelines, different plugin systems and a growing amount of glue code to keep bundling behavior aligned between development and production.
+Так можно было сфокусироваться на DX и оркестрации, не изобретая парсинг и бандлинг. Но два конвейера давали расхождения: разные пайплайны трансформации, разные системы плагинов и растущий слой «клея» для согласованности dev и production.
 
-To solve this, [VoidZero team](https://voidzero.dev) has built **Rolldown**, the next-generation bundler with the goal to be used in Vite. It is designed for:
+[Команда VoidZero](https://voidzero.dev) создала **Rolldown** — следующее поколение бандлера для Vite. Заложено:
 
-- **Performance**: Rolldown is written in Rust and operates at native speed. It matches esbuild’s performance level and is [**10–30× faster than Rollup**](https://github.com/rolldown/benchmarks).
-- **Compatibility**: Rolldown supports the same plugin API as Rollup and Vite. Most Vite plugins work out of the box with Vite 8.
-- **More Features**: Rolldown unlocks more advanced features for Vite, including full bundle mode, more flexible chunk split control, module-level persistent cache, Module Federation, and more.
+- **Производительность:** Rust и нативная скорость. Уровень esbuild и [**в 10–30 раз быстрее Rollup**](https://github.com/rolldown/benchmarks).
+- **Совместимость:** тот же plugin API, что у Rollup и Vite. Большинство плагинов Vite работают с Vite 8 без доработок.
+- **Больше возможностей:** full bundle mode, гибче сплит чанков, модульный персистентный кэш, Module Federation и другое.
 
-## Unifying the toolchain
+## Единый toolchain
 
-The impact of Vite’s bundler swap goes beyond performance. Bundlers leverage parsers, resolvers, transformers, and minifiers. Rolldown uses Oxc, another project led by VoidZero, for these purposes.
+Смена бандлера влияет не только на скорость. Бандлеры используют парсеры, резолверы, трансформеры и минификаторы. Rolldown для этого опирается на Oxc — тоже проект VoidZero.
 
-**That makes Vite the entry point to an end-to-end toolchain maintained by the same team: The build tool (Vite), the bundler (Rolldown) and the compiler (Oxc).**
+**Vite становится входной точкой в сквозной toolchain одной команды: инструмент сборки (Vite), бандлер (Rolldown) и компилятор (Oxc).**
 
-This alignment ensures behavior consistency across the stack, and allows us to rapidly adopt and align with new language specifications as JavaScript continues to evolve. It also unlocks a wide range of improvements that previously couldn’t be done by Vite alone. For example, we can leverage Oxc’s semantic analysis to perform better tree-shaking in Rolldown.
+Поведение согласовано по стеку, новые спецификации JavaScript можно внедрять быстрее. Открываются улучшения, недоступные одному только Vite — например семантический анализ Oxc для лучшего tree-shaking в Rolldown.
 
-## How Vite migrated to Rolldown
+## Как Vite перешёл на Rolldown
 
-The migration to a Rolldown-powered Vite is a foundational change. Therefore, our team took deliberate steps to implement it without sacrificing stability or ecosystem compatibility.
+Миграция на Rolldown — фундаментальное изменение, поэтому шаги были осознанными, без потери стабильности и совместимости с экосистемой.
 
-First, a separate `rolldown-vite` package was [released as a technical preview](https://voidzero.dev/posts/announcing-rolldown-vite). This allowed us to work with early adopters without affecting the stable version of Vite. Early adopters benefited from Rolldown’s performance gains while providing valuable feedback. Highlights:
+Сначала отдельный пакет `rolldown-vite` [вышел как технический превью](https://voidzero.dev/posts/announcing-rolldown-vite) — ранние пользователи без риска для стабильного Vite. Они получили прирост скорости и дали фидбек. Примеры:
 
-- Linear's production build times were reduced from 46s to 6s
-- Ramp reduced their build time by 57%
-- Mercedes-Benz.io cut their build time down by up to 38%
-- Beehiiv reduced their build time by 64%
+- У Linear время production-сборки сократилось с 46 с до 6 с
+- У Ramp — на 57%
+- У Mercedes-Benz.io — до 38%
+- У Beehiiv — на 64%
 
-Next, we set up a test suite for validating key Vite plugins against `rolldown-vite`. This CI job helped us catch regressions and compatibility issues early, especially for frameworks and meta-frameworks such as SvelteKit, react-router and Storybook.
+Далее — тесты ключевых плагинов Vite против `rolldown-vite` в CI: раннее обнаружение регрессий для SvelteKit, react-router, Storybook и др.
 
-Lastly, we built a compatibility layer to help migrate developers from Rollup and esbuild options to the corresponding Rolldown options.
+Наконец — слой совместимости для переноса опций Rollup и esbuild на эквиваленты Rolldown.
 
-As a result, there is a smooth migration path to Vite 8 for everyone.
+В итоге путь к Vite 8 Beta получился плавным.
 
-## Migrating to Vite 8 Beta
+## Миграция на Vite 8 Beta
 
-Since Vite 8 touches the core build behavior, we focused on keeping the configuration API and plugin hooks unchanged. We created a [migration guide](/guide/migration) to help you upgrade.
+Мы старались не трогать публичный API конфигурации и хуки плагинов. Есть [руководство по миграции](/guide/migration).
 
-There are two available upgrade paths:
+Два пути:
 
-1. **Direct Upgrade:** Update `vite` in `package.json` and run the usual dev and build commands.
-2. **Gradual Migration:** Migrate from Vite 7 to the `rolldown-vite` package, and then to Vite 8. This allows you to identify incompatibilities or issues isolated to Rolldown without other changes to Vite. (Recommended for larger or complex projects)
+1. **Прямое обновление:** поднять `vite` в `package.json` и запускать привычные dev/build.
+2. **Постепенно:** с Vite 7 перейти на `rolldown-vite`, затем на Vite 8 — изолировать несовместимости Rolldown без прочих изменений Vite. (Рекомендуется для крупных или сложных проектов)
 
 > [!IMPORTANT]
-> If you are relying on specific Rollup or esbuild options, you might need to make some adjustments to your Vite config. Please refer to the [migration guide](/guide/migration) for detailed instructions and examples.
-> As with all non-stable, major releases, thorough testing is recommended after upgrading to ensure everything works as expected. Please make sure to report any [issues](https://github.com/vitejs/rolldown-vite/issues).
+> Если вы опираетесь на специфичные опции Rollup или esbuild, конфиг Vite может потребовать правок. См. [руководство по миграции](/guide/migration) с примерами.
+> Как и для любого нестабильного мажора, после обновления нужна тщательная проверка. Сообщайте об [issues](https://github.com/vitejs/rolldown-vite/issues).
 
-If you use a framework or tool that uses Vite as dependency, for example Astro, Nuxt, or Vitest, you have to override the `vite` dependency in your `package.json`, which works slightly different depending on your package manager:
+Если фреймворк или инструмент тянет Vite как зависимость (Astro, Nuxt, Vitest и т.д.), нужно переопределить зависимость `vite` в `package.json` — синтаксис зависит от менеджера пакетов:
 
 :::code-group
 
@@ -130,35 +130,35 @@ If you use a framework or tool that uses Vite as dependency, for example Astro, 
 
 :::
 
-After adding these overrides, reinstall your dependencies and start your development server or build your project as usual.
+После overrides переустановите зависимости и запускайте dev/build как обычно.
 
-## Additional Features in Vite 8
+## Дополнительные возможности Vite 8
 
-In addition to shipping with Rolldown, Vite 8 comes with:
+Помимо Rolldown в Vite 8 есть:
 
-- **Built-in tsconfig `paths` support:** Developers can enable it by setting [`resolve.tsconfigPaths`](/config/shared-options.md#resolve-tsconfigpaths) to `true`. This feature has a small performance cost and is not enabled by default.
-- **`emitDecoratorMetadata` support:** Vite 8 now has built-in automatic support for TypeScript's [`emitDecoratorMetadata` option](https://www.typescriptlang.org/tsconfig/#emitDecoratorMetadata). See the [Features](/guide/features.md#emitdecoratormetadata) page for more details.
+- **Встроенная поддержка `paths` из tsconfig:** включение через [`resolve.tsconfigPaths`](/config/shared-options.md#resolve-tsconfigpaths) = `true`. Небольшая цена по производительности, по умолчанию выключено.
+- **Поддержка `emitDecoratorMetadata`:** встроенная автоматическая поддержка опции TypeScript [`emitDecoratorMetadata`](https://www.typescriptlang.org/tsconfig/#emitDecoratorMetadata). Подробнее — [Features](/guide/features.md#emitdecoratormetadata).
 
-## Looking Ahead
+## Дальше
 
-Speed has always been a defining feature for Vite. The integration with Rolldown and, by extension, Oxc means JavaScript developers benefit from Rust’s speed. Upgrading to Vite 8 should result in performance gains simply from using Rust.
+Скорость всегда была визитной карточкой Vite. Rolldown и Oxc дают разработчикам на JavaScript выигрыш от скорости Rust. Обновление до Vite 8 само по себе ускоряет сборку.
 
-We are also excited to ship Vite’s Full Bundle Mode soon, which drastically improves Vite’s dev server speed for large projects. Preliminary results show 3× faster dev server startup, 40% faster full reloads, and 10× fewer network requests.
+Скоро выйдет Full Bundle Mode Vite — сильно ускорит dev-сервер на больших проектах. Предварительно: в 3 раза быстрее старт dev, на 40% быстрее полные перезагрузки, в 10 раз меньше сетевых запросов.
 
-Another defining Vite feature is the plugin ecosystem. We want JavaScript developers to continue extending and customizing Vite in JavaScript, the language they’re familiar with, while benefiting from Rust’s performance gains. Our team is collaborating with VoidZero team to accelerate JavaScript plugin usage in these Rust-based systems.
+Сильна и экосистема плагинов. Хотим, чтобы разработчики по-прежнему расширяли Vite на JavaScript, получая выгоду от Rust. Мы вместе с VoidZero ускоряем использование JS-плагинов в этих системах.
 
-Upcoming optimizations that are currently experimental:
+Экспериментальные направления:
 
-- [**Raw AST transfer**](https://github.com/oxc-project/oxc/issues/2409). Allow JavaScript plugins to access the Rust-produced AST with minimal overhead.
-- [**Native MagicString transforms**](https://rolldown.rs/in-depth/native-magic-string#native-magicstring). Simple custom transforms with logic in JavaScript but computation in Rust.
+- [**Raw AST transfer**](https://github.com/oxc-project/oxc/issues/2409) — доступ JS-плагинов к AST из Rust с минимальными накладными расходами.
+- [**Native MagicString transforms**](https://rolldown.rs/in-depth/native-magic-string#native-magicstring) — простые кастомные трансформы: логика в JS, вычисления в Rust.
 
-## **Connect with us**
+## Связь с нами
 
-If you've tried Vite 8 beta, then we'd love to hear your feedback! Please report any issues or share your experience:
+Если попробовали Vite 8 beta — ждём фидбек. Сообщения и опыт:
 
-- **Discord**: Join our [community server](https://chat.vite.dev/) for real-time discussions
-- **GitHub**: Share feedback on [GitHub discussions](https://github.com/vitejs/vite/discussions)
-- **Issues**: Report issues on the [rolldown-vite repository](https://github.com/vitejs/rolldown-vite/issues) for bugs and regressions
-- **Wins**: Share your improved build times in the [rolldown-vite-perf-wins repository](https://github.com/vitejs/rolldown-vite-perf-wins)
+- **Discord:** [сервер сообщества](https://chat.vite.dev/) для живого общения
+- **GitHub:** [Discussions](https://github.com/vitejs/vite/discussions)
+- **Issues:** баги и регрессии — [репозиторий rolldown-vite](https://github.com/vitejs/rolldown-vite/issues)
+- **Успехи:** делитесь ускорением сборки в [rolldown-vite-perf-wins](https://github.com/vitejs/rolldown-vite-perf-wins)
 
-We appreciate all reports and reproduction cases. They help guide us towards the release of a stable 8.0.0.
+Спасибо за репорты и воспроизводимые кейсы — они ведут к стабильному 8.0.0.

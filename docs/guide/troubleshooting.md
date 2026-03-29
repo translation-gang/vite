@@ -1,47 +1,47 @@
-# Troubleshooting
+# Устранение неполадок
 
-See [Rollup's troubleshooting guide](https://rollupjs.org/troubleshooting/) for more information too.
+См. также [руководство по troubleshooting Rollup](https://rollupjs.org/troubleshooting/).
 
-If the suggestions here don't work, please try posting questions on [GitHub Discussions](https://github.com/vitejs/vite/discussions) or in the `#help` channel of [Vite Land Discord](https://chat.vite.dev).
+Если советы не помогли — [GitHub Discussions](https://github.com/vitejs/vite/discussions) или канал `#help` в [Vite Land Discord](https://chat.vite.dev).
 
 ## CLI
 
 ### `Error: Cannot find module 'C:\foo\bar&baz\vite\bin\vite.js'`
 
-The path to your project folder may include `&`, which doesn't work with `npm` on Windows ([npm/cmd-shim#45](https://github.com/npm/cmd-shim/issues/45)).
+В пути к проекту может быть `&`, что ломает `npm` на Windows ([npm/cmd-shim#45](https://github.com/npm/cmd-shim/issues/45)).
 
-You will need to either:
+Варианты:
 
-- Switch to another package manager (e.g. `pnpm`, `yarn`)
-- Remove `&` from the path to your project
+- Другой менеджер пакетов (`pnpm`, `yarn`)
+- Убрать `&` из пути
 
 ## Config
 
 ### This package is ESM only
 
-When importing an ESM only package by `require`, the following error happens.
+При импорте ESM-only пакета через `require`:
 
 > Failed to resolve "foo". This package is ESM only but it was tried to load by `require`.
 
 > Error [ERR_REQUIRE_ESM]: require() of ES Module /path/to/dependency.js from /path/to/vite.config.js not supported.
 > Instead change the require of index.js in /path/to/vite.config.js to a dynamic import() which is available in all CommonJS modules.
 
-In Node.js <=22, ESM files cannot be loaded by [`require`](https://nodejs.org/docs/latest-v22.x/api/esm.html#require) by default.
+В Node.js ≤22 ESM по умолчанию не грузится через [`require`](https://nodejs.org/docs/latest-v22.x/api/esm.html#require).
 
-While it may work using [`--experimental-require-module`](https://nodejs.org/docs/latest-v22.x/api/modules.html#loading-ecmascript-modules-using-require), or Node.js >22, or in other runtimes, we still recommend converting your config to ESM by either:
+Даже если сработает [`--experimental-require-module`](https://nodejs.org/docs/latest-v22.x/api/modules.html#loading-ecmascript-modules-using-require) или Node &gt;22, лучше перевести конфиг на ESM:
 
-- adding `"type": "module"` to the nearest `package.json`
-- renaming `vite.config.js`/`vite.config.ts` to `vite.config.mjs`/`vite.config.mts`
+- `"type": "module"` в ближайшем `package.json`
+- переименовать `vite.config.js`/`vite.config.ts` в `vite.config.mjs`/`vite.config.mts`
 
 ## Dev Server
 
 ### Requests are stalled forever
 
-If you are using Linux, file descriptor limits and inotify limits may be causing the issue. As Vite does not bundle most of the files, browsers may request many files which require many file descriptors, going over the limit.
+На Linux часто упираются в лимиты дескрипторов и inotify. Vite не бандлит большинство файлов, браузер запрашивает много файлов — лимит превышается.
 
-To solve this:
+Решение:
 
-- Increase file descriptor limit by `ulimit`
+- Поднять лимит дескрипторов (`ulimit`)
 
   ```shell
   # Check current limit
@@ -51,7 +51,7 @@ To solve this:
   # Restart your browser
   ```
 
-- Increase the following inotify related limits by `sysctl`
+- Лимиты inotify через `sysctl`
 
   ```shell
   # Check current limits
@@ -62,29 +62,28 @@ To solve this:
   $ sudo sysctl fs.inotify.max_user_watches=524288
   ```
 
-If the above steps don't work, you can try adding `DefaultLimitNOFILE=65536` as an un-commented config to the following files:
+Если не помогло, в файлах (без комментария `#`) добавьте `DefaultLimitNOFILE=65536`:
 
 - /etc/systemd/system.conf
 - /etc/systemd/user.conf
 
-For Ubuntu Linux, you may need to add the line `* - nofile 65536` to the file `/etc/security/limits.conf` instead of updating systemd config files.
+В Ubuntu иногда достаточно строки `* - nofile 65536` в `/etc/security/limits.conf`.
 
-Note that these settings persist but a **restart is required**.
+Настройки сохраняются, нужен **перезапуск**.
 
-Alternatively, if the server is running inside a VS Code devcontainer, the request may appear to be stalled. To fix this issue, see
-[Dev Containers / VS Code Port Forwarding](#dev-containers-vs-code-port-forwarding).
+Если сервер в VS Code devcontainer, запросы могут «висеть» — см. [Dev Containers / VS Code Port Forwarding](#dev-containers-vs-code-port-forwarding).
 
 ### Vite crashes with ENOSPC error
 
-If you see an error like this on Linux:
+На Linux:
 
 > Error: ENOSPC: System limit for number of file watchers reached
 
-This happens when you have too many files in your project directory (e.g., many images or assets) and exceed the system's file watcher limit. Linux has a default limit of around 8,192-10,000 file watchers.
+Слишком много файлов в проекте (картинки, ассеты) — превышен лимит inotify (часто ~8192–10000).
 
-To solve this, you can:
+Решение:
 
-- Increase the system file watcher limit:
+- Увеличить лимит наблюдателей:
 
   ```shell
   # Check current limit
@@ -96,133 +95,129 @@ To solve this, you can:
   $ sudo sysctl -p
   ```
 
-- Exclude directories with many files from file watching using [`server.watch.ignored`](/config/server-options#server-watch)
-- Use polling instead of file system events with [`server.watch.usePolling`](/config/server-options#server-watch). Note that polling uses more CPU resources
+- Исключить тяжёлые каталоги из watch: [`server.watch.ignored`](/config/server-options#server-watch)
+- Polling: [`server.watch.usePolling`](/config/server-options#server-watch) — выше нагрузка на CPU
 
 ### Network requests stop loading
 
-When using a self-signed SSL certificate, Chrome ignores all caching directives and reloads the content. Vite relies on these caching directives.
+С самоподписанным SSL Chrome игнорирует кэш-директивы; Vite на них опирается.
 
-To resolve the problem use a trusted SSL cert.
+Используйте доверенный сертификат.
 
-See: [Cache problems](https://helpx.adobe.com/mt/experience-manager/kb/cache-problems-on-chrome-with-SSL-certificate-errors.html), [Chrome issue](https://bugs.chromium.org/p/chromium/issues/detail?id=110649#c8)
+См. [Cache problems](https://helpx.adobe.com/mt/experience-manager/kb/cache-problems-on-chrome-with-SSL-certificate-errors.html), [Chrome issue](https://bugs.chromium.org/p/chromium/issues/detail?id=110649#c8)
 
 #### macOS
 
-You can install a trusted cert via the CLI with this command:
+Доверенный сертификат через CLI:
 
 ```
 security add-trusted-cert -d -r trustRoot -k ~/Library/Keychains/login.keychain-db your-cert.cer
 ```
 
-Or, by importing it into the Keychain Access app and updating the trust of your cert to "Always Trust."
+Или импорт в «Связку ключей» и доверие «Всегда доверять».
 
 ### 431 Request Header Fields Too Large
 
-When the server / WebSocket server receives a large HTTP header, the request will be dropped and the following warning will be shown.
+Большой HTTP-заголовок — запрос отбрасывается, в логе предупреждение.
 
 > Server responded with status code 431. See https://vite.dev/guide/troubleshooting.html#_431-request-header-fields-too-large.
 
-This is because Node.js limits request header size to mitigate [CVE-2018-12121](https://www.cve.org/CVERecord?id=CVE-2018-12121).
+Node.js ограничивает размер заголовков из‑за [CVE-2018-12121](https://www.cve.org/CVERecord?id=CVE-2018-12121).
 
-To avoid this, try to reduce your request header size. For example, if the cookie is long, delete it. Or you can use [`--max-http-header-size`](https://nodejs.org/api/cli.html#--max-http-header-sizesize) to change max header size.
+Уменьшите заголовки (например, длинные cookie) или задайте [`--max-http-header-size`](https://nodejs.org/api/cli.html#--max-http-header-sizesize).
 
 ### Dev Containers / VS Code Port Forwarding
 
-If you are using a Dev Container or port forwarding feature in VS Code, you may need to set the [`server.host`](/config/server-options.md#server-host) option to `127.0.0.1` in the config to make it work.
+В Dev Container или при port forwarding в VS Code задайте [`server.host`](/config/server-options.md#server-host) в `127.0.0.1`.
 
-This is because [the port forwarding feature in VS Code does not support IPv6](https://github.com/microsoft/vscode-remote-release/issues/7029).
+[Port forwarding в VS Code не поддерживает IPv6](https://github.com/microsoft/vscode-remote-release/issues/7029).
 
-See [#16522](https://github.com/vitejs/vite/issues/16522) for more details.
+Подробнее: [#16522](https://github.com/vitejs/vite/issues/16522).
 
 ## HMR
 
 ### Vite detects a file change but the HMR is not working
 
-You may be importing a file with a different case. For example, `src/foo.js` exists and `src/bar.js` contains:
+Возможен разный регистр в импорте. Есть `src/foo.js`, а в `src/bar.js`:
 
 ```js
 import './Foo.js' // should be './foo.js'
 ```
 
-Related issue: [#964](https://github.com/vitejs/vite/issues/964)
+Связанный issue: [#964](https://github.com/vitejs/vite/issues/964)
 
 ### Vite does not detect a file change
 
-If you are running Vite with WSL2, Vite cannot watch file changes in some conditions. See [`server.watch` option](/config/server-options.md#server-watch).
+Под WSL2 иногда не срабатывает watch. См. опцию [`server.watch`](/config/server-options.md#server-watch).
 
 ### A full reload happens instead of HMR
 
-If HMR is not handled by Vite or a plugin, a full reload will happen as it's the only way to refresh the state.
+Если HMR не обрабатывается Vite или плагином — остаётся полная перезагрузка.
 
-If HMR is handled but it is within a circular dependency, a full reload will also happen to recover the execution order. To solve this, try breaking the loop. You can run `vite --debug hmr` to log the circular dependency path if a file change triggered it.
+Если HMR есть, но есть циклическая зависимость — тоже full reload. Разорвите цикл. Для диагностики: `vite --debug hmr`.
 
 ## Build
 
 ### Built file does not work because of CORS error
 
-If the HTML file output was opened with `file` protocol, the scripts won't run with the following error.
+При открытии HTML через `file://` скрипты не выполнятся:
 
 > Access to script at 'file:///foo/bar.js' from origin 'null' has been blocked by CORS policy: Cross origin requests are only supported for protocol schemes: http, data, isolated-app, chrome-extension, chrome, https, chrome-untrusted.
 
 > Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at file:///foo/bar.js. (Reason: CORS request not http).
 
-See [Reason: CORS request not HTTP - HTTP | MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS/Errors/CORSRequestNotHttp) for more information about why this happens.
+См. [Reason: CORS request not HTTP - HTTP | MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS/Errors/CORSRequestNotHttp).
 
-You will need to access the file with `http` protocol. The easiest way to achieve this is to run `npx vite preview`.
+Открывайте через `http`, например `npx vite preview`.
 
 ### No such file or directory error due to case sensitivity
 
-If you encounter errors like `ENOENT: no such file or directory` or `Module not found`, this often occurs when your project was developed on a case-insensitive filesystem (Windows / macOS) but built on a case-sensitive one (Linux). Please make sure that the imports have the correct casing.
+`ENOENT` / `Module not found` часто из‑за разного регистра ФС: разработка на Windows/macOS (без учёта регистра), сборка на Linux. Проверьте регистр в импортах.
 
 ### `Failed to fetch dynamically imported module` error
 
 > TypeError: Failed to fetch dynamically imported module
 
-This error occurs in several cases:
+Возможные причины:
 
-- Version skew
-- Poor network conditions
-- Browser extensions blocking requests
+- Расхождение версий (version skew)
+- Плохая сеть
+- Расширения браузера
 
 #### Version skew
 
-When you deploy a new version of your application, the HTML file and the JS files still reference old chunk names that were deleted in the new deployment. This happens when:
+После деплоя старый HTML в кэше ссылается на удалённые чанки.
 
-1. Users have an old version of your app cached in their browser
-2. You deploy a new version with different chunk names (due to code changes)
-3. The cached HTML tries to load chunks that no longer exist
+1. У пользователя закэширована старая версия
+2. Новый деплой с другими именами чанков
+3. Старый HTML запрашивает несуществующие чанки
 
-If you are using a framework, refer to their documentation first as it may have a built-in solution for this problem.
+Сначала смотрите документацию фреймворка.
 
-To resolve this, you can:
+Что можно сделать:
 
-- **Keep old chunks temporarily**: Consider keeping the previous deployment's chunks for a period to allow cached users to transition smoothly.
-- **Use a service worker**: Implement a service worker that will prefetch all the assets and cache them.
-- **Prefetch the dynamic chunks**: Note that this does not help if your HTML file is cached by the browser due to `Cache-Control` headers.
-- **Implement a graceful fallback**: Implement error handling for dynamic imports to reload the page when chunks are missing. See [Load Error Handling](./build.md#load-error-handling) for more details.
+- **Временно хранить старые чанки** после выката
+- **Service worker** с префетчем и кэшем
+- **Префетч динамических чанков** (не поможет, если HTML закэширован по `Cache-Control`)
+- **Обработка ошибки импорта** и перезагрузка страницы. См. [Load Error Handling](./build.md#load-error-handling)
 
 #### Poor network conditions
 
-This error may occur in unstable network environments. For example, when the request fails due to network errors or server downtime.
-
-Note that you cannot retry the dynamic import due to browser limitations ([whatwg/html#6768](https://github.com/whatwg/html/issues/6768)).
+Сбои сети или сервера. Повторить динамический импорт в браузере нельзя ([whatwg/html#6768](https://github.com/whatwg/html/issues/6768)).
 
 #### Browser extensions blocking requests
 
-The error may also occur if the browser extensions (like ad-blockers) are blocking that request.
-
-It might be possible to work around by selecting a different chunk name by [`build.rolldownOptions.output.chunkFileNames`](../config/build-options.md#build-rolldownoptions), as these extensions often block requests based on file names (e.g. names containing `ad`, `track`).
+Блокировщики и др. могут резать запросы. Иногда помогает смена шаблона имён чанков: [`build.rolldownOptions.output.chunkFileNames`](../config/build-options.md#build-rolldownoptions) (часто режут по подстрокам вроде `ad`, `track`).
 
 ## Optimized Dependencies
 
 ### Outdated pre-bundled deps when linking to a local package
 
-The hash key used to invalidate optimized dependencies depends on the package lock contents, the patches applied to dependencies, and the options in the Vite config file that affects the bundling of node modules. This means that Vite will detect when a dependency is overridden using a feature as [npm overrides](https://docs.npmjs.com/cli/v9/configuring-npm/package-json#overrides), and re-bundle your dependencies on the next server start. Vite won't invalidate the dependencies when you use a feature like [npm link](https://docs.npmjs.com/cli/v9/commands/npm-link). In case you link or unlink a dependency, you'll need to force re-optimization on the next server start by using `vite --force`. We recommend using overrides instead, which are supported now by every package manager (see also [pnpm overrides](https://pnpm.io/9.x/package_json#pnpmoverrides) and [yarn resolutions](https://yarnpkg.com/configuration/manifest/#resolutions)).
+Инвалидация pre-bundle зависит от lockfile, патчей и опций Vite, влияющих на бандл `node_modules`. Переопределения ([npm overrides](https://docs.npmjs.com/cli/v9/configuring-npm/package-json#overrides)) учитываются; [`npm link`](https://docs.npmjs.com/cli/v9/commands/npm-link) — нет: после link/unlink перезапускайте с `vite --force`. Предпочтительнее overrides ([pnpm overrides](https://pnpm.io/9.x/package_json#pnpmoverrides), [yarn resolutions](https://yarnpkg.com/configuration/manifest/#resolutions)).
 
 ## Performance Bottlenecks
 
-If you suffer any application performance bottlenecks resulting in slow load times, you can start the built-in Node.js inspector with your Vite dev server or when building your application to create the CPU profile:
+Медленная загрузка — профилируйте встроенным инспектором Node при dev или build:
 
 ::: code-group
 
@@ -237,55 +232,53 @@ vite build --profile
 :::
 
 ::: tip Vite Dev Server
-Once your application is opened in the browser, just await finish loading it and then go back to the terminal and press `p` key (will stop the Node.js inspector) then press `q` key to stop the dev server.
+После загрузки страницы в браузере в терминале нажмите `p` (остановка инспектора), затем `q` (остановка dev-сервера).
 :::
 
-Node.js inspector will generate `vite-profile-0.cpuprofile` in the root folder, go to https://www.speedscope.app/, and upload the CPU profile using the `BROWSE` button to inspect the result.
+Появится `vite-profile-0.cpuprofile` в корне. Загрузите на https://www.speedscope.app/ через `BROWSE`.
 
-You can install [vite-plugin-inspect](https://github.com/antfu/vite-plugin-inspect), which lets you inspect the intermediate state of Vite plugins and can also help you to identify which plugins or middlewares are the bottleneck in your applications. The plugin can be used in both dev and build modes. Check the readme file for more details.
+Плагин [vite-plugin-inspect](https://github.com/antfu/vite-plugin-inspect) показывает промежуточное состояние плагинов и узкие места (dev и build). См. readme плагина.
 
 ## Others
 
 ### Module externalized for browser compatibility
 
-When you use a Node.js module in the browser, Vite will output the following warning.
+При использовании Node-модуля в браузере Vite выдаст предупреждение:
 
 > Module "fs" has been externalized for browser compatibility. Cannot access "fs.readFile" in client code.
 
-This is because Vite does not automatically polyfill Node.js modules.
+Vite не полифилит Node API в браузере.
 
-We recommend avoiding Node.js modules for browser code to reduce the bundle size, although you can add polyfills manually. If the module is imported from a third-party library (that's meant to be used in the browser), it's advised to report the issue to the respective library.
+Лучше не тянуть Node-модули в клиентский код; полифилы — вручную. Если импорт из сторонней библиотеки, ориентированной на браузер — сообщите авторам.
 
 ### Syntax Error / Type Error happens
 
-Vite cannot handle and does not support code that only runs on non-strict mode (sloppy mode). This is because Vite uses ESM and it is always [strict mode](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode) inside ESM.
+Vite не поддерживает код только для non-strict (sloppy) режима: ESM всегда [strict mode](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode).
 
-For example, you might see these errors.
+Примеры:
 
 > [ERROR] With statements cannot be used with the "esm" output format due to strict mode
 
 > TypeError: Cannot create property 'foo' on boolean 'false'
 
-If these codes are used inside dependencies, you could use [`patch-package`](https://github.com/ds300/patch-package) (or [`yarn patch`](https://yarnpkg.com/cli/patch) or [`pnpm patch`](https://pnpm.io/cli/patch)) for an escape hatch.
+В зависимостях можно попробовать [`patch-package`](https://github.com/ds300/patch-package), [`yarn patch`](https://yarnpkg.com/cli/patch), [`pnpm patch`](https://pnpm.io/cli/patch).
 
 ### Browser extensions
 
-Some browser extensions (like ad-blockers) may prevent the Vite client from sending requests to the Vite dev server. You may see a white screen without logged errors in this case. You may also see the following error:
+Расширения могут блокировать запросы к dev-серверу Vite — белый экран без явных ошибок или:
 
 > TypeError: Failed to fetch dynamically imported module
 
-Try disabling extensions if you have this issue.
+Попробуйте отключить расширения.
 
 ### Cross drive links on Windows
 
-If there's a cross drive links in your project on Windows, Vite may not work.
+Перекрёстные ссылки между дисками могут ломать Vite:
 
-An example of cross drive links are:
+- виртуальный диск через `subst`
+- symlink/junction на другой диск (`mklink`, например глобальный кэш Yarn)
 
-- a virtual drive linked to a folder by `subst` command
-- a symlink/junction to a different drive by `mklink` command (e.g. Yarn global cache)
-
-Related issue: [#10802](https://github.com/vitejs/vite/issues/10802)
+Issue: [#10802](https://github.com/vitejs/vite/issues/10802)
 
 <script setup lang="ts">
 // redirect old links with hash to old version docs

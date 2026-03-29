@@ -1,62 +1,62 @@
-# SSR Options
+# Опции SSR
 
-Unless noted, the options in this section are applied to both dev and build.
+Если не указано иное, опции этого раздела применяются и к dev, и к build.
 
 ## ssr.external
 
-- **Type:** `string[] | true`
-- **Related:** [SSR Externals](/guide/ssr#ssr-externals)
+- **Тип:** `string[] | true`
+- **См. также:** [Внешние зависимости SSR](/guide/ssr#ssr-externals)
 
-Externalize the given dependencies and their transitive dependencies for SSR. By default, all dependencies are externalized except for linked dependencies (for HMR). If you prefer to externalize the linked dependency, you can pass its name to this option.
+Вынести указанные зависимости и их транзитивные зависимости за пределы бандла SSR. По умолчанию все зависимости внешние, кроме связанных (linked) — для HMR. Чтобы вынести и linked-зависимость, укажите её имя здесь.
 
-If `true`, all dependencies including linked dependencies are externalized.
+При `true` внешними становятся все зависимости, включая linked.
 
-Note that the explicitly listed dependencies (using `string[]` type) will always take priority if they're also listed in `ssr.noExternal` (using any type).
+Явно перечисленные в `string[]` зависимости имеют приоритет, даже если они также указаны в `ssr.noExternal` (в любом виде).
 
 ## ssr.noExternal
 
-- **Type:** `string | RegExp | (string | RegExp)[] | true`
-- **Related:** [SSR Externals](/guide/ssr#ssr-externals)
+- **Тип:** `string | RegExp | (string | RegExp)[] | true`
+- **См. также:** [Внешние зависимости SSR](/guide/ssr#ssr-externals)
 
-Prevent listed dependencies from being externalized for SSR, which they will get bundled in build. By default, only linked dependencies are not externalized (for HMR). If you prefer to externalize the linked dependency, you can pass its name to the `ssr.external` option.
+Не выносить перечисленные зависимости наружу при SSR — они попадут в бандл при сборке. По умолчанию только linked-зависимости не внешние (для HMR). Чтобы вынести linked-зависимость, укажите её в `ssr.external`.
 
-If `true`, no dependencies are externalized. However, dependencies explicitly listed in `ssr.external` (using `string[]` type) can take priority and still be externalized. If `ssr.target: 'node'` is set, Node.js built-ins will also be externalized by default.
+При `true` ни одна зависимость не внешняя. Исключение: явно перечисленные в `ssr.external` (`string[]`) могут остаться внешними. При `ssr.target: 'node'` встроенные модули Node по умолчанию тоже внешние.
 
-Note that if both `ssr.noExternal: true` and `ssr.external: true` are configured, `ssr.noExternal` takes priority and no dependencies are externalized.
+Если заданы и `ssr.noExternal: true`, и `ssr.external: true`, приоритет у `ssr.noExternal` — зависимости не внешние.
 
 ## ssr.target
 
-- **Type:** `'node' | 'webworker'`
-- **Default:** `node`
+- **Тип:** `'node' | 'webworker'`
+- **По умолчанию:** `node`
 
-Build target for the SSR server.
+Целевая среда для SSR-сервера.
 
 ## ssr.resolve.conditions
 
-- **Type:** `string[]`
-- **Default:** `['module', 'node', 'development|production']` (`defaultServerConditions`) (`['module', 'browser', 'development|production']` (`defaultClientConditions`) for `ssr.target === 'webworker'`)
-- **Related:** [Resolve Conditions](./shared-options.md#resolve-conditions)
+- **Тип:** `string[]`
+- **По умолчанию:** `['module', 'node', 'development|production']` (`defaultServerConditions`) (`['module', 'browser', 'development|production']` (`defaultClientConditions`) при `ssr.target === 'webworker'`)
+- **См. также:** [Условия разрешения](./shared-options.md#resolve-conditions)
 
-These conditions are used in the plugin pipeline, and only affect non-externalized dependencies during the SSR build. Use `ssr.resolve.externalConditions` to affect externalized imports.
+Условия в конвейере плагинов; влияют только на невнешние зависимости при SSR-сборке. Для внешних импортов используйте `ssr.resolve.externalConditions`.
 
 ## ssr.resolve.externalConditions
 
-- **Type:** `string[]`
-- **Default:** `['node']`
+- **Тип:** `string[]`
+- **По умолчанию:** `['node']`
 
-Conditions that are used during ssr import (including `ssrLoadModule`) of externalized direct dependencies (external dependencies imported by Vite).
+Условия при SSR-импорте (включая `ssrLoadModule`) прямых внешних зависимостей (внешних зависимостей, импортируемых Vite).
 
 :::tip
 
-When using this option, make sure to run Node with [`--conditions` flag](https://nodejs.org/docs/latest/api/cli.html#-c-condition---conditionscondition) with the same values in both dev and build to get a consistent behavior.
+При использовании этой опции запускайте Node с [флагом `--conditions`](https://nodejs.org/docs/latest/api/cli.html#-c-condition---conditionscondition) с теми же значениями в dev и после build для согласованного поведения.
 
-For example, when setting `['node', 'custom']`, you should run `NODE_OPTIONS='--conditions custom' vite` in dev and `NODE_OPTIONS="--conditions custom" node ./dist/server.js` after build.
+Например, для `['node', 'custom']` в dev: `NODE_OPTIONS='--conditions custom' vite`, после сборки: `NODE_OPTIONS="--conditions custom" node ./dist/server.js`.
 
 :::
 
 ## ssr.resolve.mainFields
 
-- **Type:** `string[]`
-- **Default:** `['module', 'jsnext:main', 'jsnext']`
+- **Тип:** `string[]`
+- **По умолчанию:** `['module', 'jsnext:main', 'jsnext']`
 
-List of fields in `package.json` to try when resolving a package's entry point. Note this takes lower precedence than conditional exports resolved from the `exports` field: if an entry point is successfully resolved from `exports`, the main field will be ignored. This setting only affects non-externalized dependencies.
+Поля `package.json`, перебираемые при разрешении точки входа пакета. Ниже приоритета, чем conditional exports из `exports`: если точка входа найдена через `exports`, main-поля игнорируются. Влияет только на невнешние зависимости.

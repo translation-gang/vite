@@ -1,5 +1,5 @@
-<!-- You can remove the following notice from your fork -->
-## This repo is a template for [Vite.js docs translation repositories](https://github.com/vitejs?q=docs). See [guide](/.github/CONTRIBUTING.md).
+<!-- При желании удалите примечание ниже в своём форке -->
+## Этот репозиторий — шаблон для [репозиториев переводов документации Vite.js](https://github.com/vitejs?q=docs). См. [руководство](/.github/CONTRIBUTING.md).
 
 ---
 <p align="center">
@@ -9,7 +9,7 @@
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="https://vite.dev/vite-light.svg">
       <source media="(prefers-color-scheme: light)" srcset="https://vite.dev/vite-dark.svg">
-      <img alt="vite logo" src="https://vite.dev/vite-dark.svg" height="60">
+      <img alt="логотип Vite" src="https://vite.dev/vite-dark.svg" height="60">
     </picture>
   </a>
   <br>
@@ -17,55 +17,55 @@
 </p>
 <br/>
 <p align="center">
-  <a href="https://npmjs.com/package/vite"><img src="https://img.shields.io/npm/v/vite.svg" alt="npm package"></a>
-  <a href="https://nodejs.org/en/about/previous-releases"><img src="https://img.shields.io/node/v/vite.svg" alt="node compatibility"></a>
-  <a href="https://github.com/vitejs/vite/actions/workflows/ci.yml"><img src="https://github.com/vitejs/vite/actions/workflows/ci.yml/badge.svg?branch=main" alt="build status"></a>
-  <a href="https://docs.warp.dev/support-and-community/community/open-source-partnership"><img src="https://img.shields.io/badge/Oz%20agents-triaging%20issues-white?logo=warp" alt="issue triage powered by Oz"></a>
-  <a href="https://chat.vite.dev"><img src="https://img.shields.io/badge/chat-discord-blue?style=flat&logo=discord" alt="discord chat"></a>
+  <a href="https://npmjs.com/package/vite"><img src="https://img.shields.io/npm/v/vite.svg" alt="npm-пакет"></a>
+  <a href="https://nodejs.org/en/about/previous-releases"><img src="https://img.shields.io/node/v/vite.svg" alt="совместимость с Node"></a>
+  <a href="https://github.com/vitejs/vite/actions/workflows/ci.yml"><img src="https://github.com/vitejs/vite/actions/workflows/ci.yml/badge.svg?branch=main" alt="статус сборки"></a>
+  <a href="https://docs.warp.dev/support-and-community/community/open-source-partnership"><img src="https://img.shields.io/badge/Oz%20agents-triaging%20issues-white?logo=warp" alt="разбор issues с помощью Oz"></a>
+  <a href="https://chat.vite.dev"><img src="https://img.shields.io/badge/chat-discord-blue?style=flat&logo=discord" alt="чат в Discord"></a>
 </p>
 <br/>
 
 # Vite ⚡
 
-> Next Generation Frontend Tooling
+> Инструментарий нового поколения для фронтенда
 
-- 💡 Instant Server Start
-- ⚡️ Lightning Fast HMR
-- 🛠️ Rich Features
-- 📦 Optimized Build
-- 🔩 Universal Plugin Interface
-- 🔑 Fully Typed APIs
+- 💡 Мгновенный старт dev-сервера
+- ⚡️ Молниеносный HMR
+- 🛠️ Богатый набор возможностей
+- 📦 Оптимизированная сборка
+- 🔩 Универсальный интерфейс плагинов
+- 🔑 Полностью типизированные API
 
-Vite (French word for "quick", pronounced [`/viːt/`](https://cdn.jsdelivr.net/gh/vitejs/vite@main/docs/public/vite.mp3), like "veet") is a new breed of frontend build tooling that significantly improves the frontend development experience. It consists of two major parts:
+Vite (французское слово «быстро», произносится [`/viːt/`](https://cdn.jsdelivr.net/gh/vitejs/vite@main/docs/public/vite.mp3), как «вит») — новый тип инструментов сборки фронтенда, который заметно улучшает опыт разработки. Он состоит из двух крупных частей:
 
-- A dev server that serves your source files over [native ES modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules), with [rich built-in features](https://vite.dev/guide/features.html) and astonishingly fast [Hot Module Replacement (HMR)](https://vite.dev/guide/features.html#hot-module-replacement).
+- Dev-сервер, отдающий исходники через [нативные ES-модули](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules), с [встроенными возможностями](https://vite.dev/guide/features.html) и невероятно быстрым [горячим обновлением модулей (HMR)](https://vite.dev/guide/features.html#hot-module-replacement).
 
-- A [build command](https://vite.dev/guide/build.html) that bundles your code with [Rollup](https://rollupjs.org), pre-configured to output highly optimized static assets for production.
+- [Команда сборки](https://vite.dev/guide/build.html), которая бандлит код с помощью [Rollup](https://rollupjs.org), заранее настроенная на выдачу высокооптимизированных статических ресурсов для продакшена.
 
-In addition, Vite is highly extensible via its [Plugin API](https://vite.dev/guide/api-plugin.html) and [JavaScript API](https://vite.dev/guide/api-javascript.html) with full typing support.
+Кроме того, Vite легко расширяется через [Plugin API](https://vite.dev/guide/api-plugin.html) и [JavaScript API](https://vite.dev/guide/api-javascript.html) с полной поддержкой типов.
 
-[Read the Docs to Learn More](https://vite.dev).
+[Читайте документацию, чтобы узнать больше](https://vite.dev).
 
-## Packages
+## Пакеты
 
-| Package                                         | Version (click for changelogs)                                                                                                    |
+| Пакет                                           | Версия (клик — changelog)                                                                                                        |
 | ----------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------- |
-| [vite](packages/vite)                           | [![vite version](https://img.shields.io/npm/v/vite.svg?label=%20)](packages/vite/CHANGELOG.md)                                    |
-| [@vitejs/plugin-legacy](packages/plugin-legacy) | [![plugin-legacy version](https://img.shields.io/npm/v/@vitejs/plugin-legacy.svg?label=%20)](packages/plugin-legacy/CHANGELOG.md) |
-| [create-vite](packages/create-vite)             | [![create-vite version](https://img.shields.io/npm/v/create-vite.svg?label=%20)](packages/create-vite/CHANGELOG.md)               |
+| [vite](packages/vite)                           | [![версия vite](https://img.shields.io/npm/v/vite.svg?label=%20)](packages/vite/CHANGELOG.md)                                    |
+| [@vitejs/plugin-legacy](packages/plugin-legacy) | [![версия plugin-legacy](https://img.shields.io/npm/v/@vitejs/plugin-legacy.svg?label=%20)](packages/plugin-legacy/CHANGELOG.md) |
+| [create-vite](packages/create-vite)             | [![версия create-vite](https://img.shields.io/npm/v/create-vite.svg?label=%20)](packages/create-vite/CHANGELOG.md)               |
 
-## Contribution
+## Участие в проекте
 
-See [Contributing Guide](CONTRIBUTING.md).
+См. [Руководство по участию](CONTRIBUTING.md).
 
-## License
+## Лицензия
 
 [MIT](LICENSE).
 
-## Sponsors
+## Спонсоры
 
 <p align="center">
   <a target="_blank" href="https://github.com/sponsors/yyx990803">
-    <img alt="sponsors" src="https://sponsors.vuejs.org/vite.svg?v2">
+    <img alt="спонсоры" src="https://sponsors.vuejs.org/vite.svg?v2">
   </a>
 </p>

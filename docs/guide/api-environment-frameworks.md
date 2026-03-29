@@ -1,25 +1,25 @@
-# Environment API for Frameworks
+# Environment API для фреймворков
 
-:::info Release Candidate
-The Environment API is generally in the release candidate phase. We'll maintain stability in the APIs between major releases to allow the ecosystem to experiment and build upon them. However, note that [some specific APIs](/changes/#considering) are still considered experimental.
+:::info Кандидат на релиз
+Environment API в целом находится в фазе кандидата на релиз. Мы будем поддерживать стабильность API между мажорными релизами, чтобы экосистема могла экспериментировать и строить на их основе. Однако имейте в виду, что [некоторые конкретные API](/changes/#considering) всё ещё считаются экспериментальными.
 
-We plan to stabilize these new APIs (with potential breaking changes) in a future major release once downstream projects have had time to experiment with the new features and validate them.
+Мы планируем стабилизировать эти новые API (с возможными breaking changes) в будущем мажорном релизе, когда даунстрим-проекты успеют поэкспериментировать с новыми возможностями и проверить их.
 
-Resources:
+Материалы:
 
-- [Feedback discussion](https://github.com/vitejs/vite/discussions/16358) where we are gathering feedback about the new APIs.
-- [Environment API PR](https://github.com/vitejs/vite/pull/16471) where the new APIs were implemented and reviewed.
+- [Обсуждение и обратная связь](https://github.com/vitejs/vite/discussions/16358), где мы собираем отзывы о новых API.
+- [PR Environment API](https://github.com/vitejs/vite/pull/16471), где новые API были реализованы и ревьюились.
 
-Please share your feedback with us.
+Поделитесь с нами своей обратной связью.
 :::
 
-## DevEnvironment Communication Levels
+## Уровни взаимодействия с `DevEnvironment` {#devenvironment-communication-levels}
 
-Since environments may run in different runtimes, communication against the environment may have constraints depending on the runtime. To allow frameworks to write runtime agnostic code easily, the Environment API provides three kinds of communication levels.
+Окружения могут выполняться в разных рантаймах, поэтому обмен с окружением может быть ограничен возможностями рантайма. Чтобы фреймворки могли писать код, не привязанный к конкретному рантайму, Environment API предлагает три уровня взаимодействия.
 
 ### `RunnableDevEnvironment`
 
-`RunnableDevEnvironment` is an environment that can communicate arbitrary values. The implicit `ssr` environment and other non-client environments use a `RunnableDevEnvironment` by default during dev. While this requires the runtime to be the same with the one the Vite server is running in, this works similarly with `ssrLoadModule` and allows frameworks to migrate and enable HMR for their SSR dev story. You can guard any runnable environment with an `isRunnableDevEnvironment` function.
+`RunnableDevEnvironment` — окружение, в котором можно передавать произвольные значения. Неявное окружение `ssr` и другие не-клиентские по умолчанию в dev используют `RunnableDevEnvironment`. Это требует того же рантайма, что и у сервера Vite, но ведёт себя похоже на `ssrLoadModule` и позволяет фреймворкам мигрировать и включить HMR для SSR в dev. Проверку «runnable»-окружения можно делать функцией `isRunnableDevEnvironment`.
 
 ```ts
 export class RunnableDevEnvironment extends DevEnvironment {
@@ -44,10 +44,10 @@ if (isRunnableDevEnvironment(server.environments.ssr)) {
 ```
 
 :::warning
-The `runner` is evaluated lazily only when it's accessed for the first time. Beware that Vite enables source map support when the `runner` is created by calling `process.setSourceMapsEnabled` or by overriding `Error.prepareStackTrace` if it's not available.
+`runner` создаётся лениво при первом обращении. Имейте в виду: при создании `runner` Vite включает поддержку source map через `process.setSourceMapsEnabled` или подмену `Error.prepareStackTrace`, если первого нет.
 :::
 
-Given a Vite server configured in middleware mode as described by the [SSR setup guide](/guide/ssr#setting-up-the-dev-server), let's implement the SSR middleware using the environment API. Remember that it doesn't have to be called `ssr`, so we'll name it `server` in this example. Error handling is omitted.
+Предположим, сервер Vite в [режиме middleware](/guide/ssr#setting-up-the-dev-server), и реализуем SSR-middleware через Environment API. Имя окружения не обязано быть `ssr` — в примере назовём его `server`. Обработку ошибок опускаем.
 
 ```js
 import fs from 'node:fs'
@@ -100,7 +100,7 @@ app.use('*', async (req, res, next) => {
 })
 ```
 
-When using environments that support HMR (such as `RunnableDevEnvironment`), you should add `import.meta.hot.accept()` in your server entry file for optimal behavior. Without this, server file changes will invalidate the entire server module graph:
+Для окружений с HMR (например `RunnableDevEnvironment`) в точке входа сервера стоит добавить `import.meta.hot.accept()` для лучшего поведения. Иначе изменения серверных файлов инвалидируют весь граф модулей сервера:
 
 ```js
 // src/entry-server.js
@@ -115,13 +115,13 @@ if (import.meta.hot) {
 
 :::info
 
-We are looking for feedback on [the `FetchableDevEnvironment` proposal](https://github.com/vitejs/vite/discussions/18191).
+Мы ждём отзывов по [предложению `FetchableDevEnvironment`](https://github.com/vitejs/vite/discussions/18191).
 
 :::
 
-`FetchableDevEnvironment` is an environment that can communicate with its runtime via the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Window/fetch) interface. Since the `RunnableDevEnvironment` is only possible to implement in a limited set of runtimes, we recommend to use the `FetchableDevEnvironment` instead of the `RunnableDevEnvironment`.
+`FetchableDevEnvironment` — окружение, которое общается с рантаймом через интерфейс [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Window/fetch). Так как `RunnableDevEnvironment` реализуем не во всех рантаймах, рекомендуем использовать `FetchableDevEnvironment` вместо `RunnableDevEnvironment`.
 
-This environment provides a standardized way of handling requests via the `handleRequest` method:
+Окружение даёт единообразный способ обработки запросов методом `handleRequest`:
 
 ```ts
 import {
@@ -157,16 +157,16 @@ if (isFetchableDevEnvironment(server.environments.custom)) {
 ```
 
 :::warning
-Vite validates the input and output of the `dispatchFetch` method: the request must be an instance of the global `Request` class and the response must be the instance of the global `Response` class. Vite will throw a `TypeError` if this is not the case.
+Vite проверяет вход и выход `dispatchFetch`: `request` должен быть экземпляром глобального класса `Request`, ответ — глобального `Response`. Иначе будет выброшен `TypeError`.
 
-Note that although the `FetchableDevEnvironment` is implemented as a class, it is considered an implementation detail by the Vite team and might change at any moment.
+Хотя `FetchableDevEnvironment` реализован как класс, для команды Vite это деталь реализации и может меняться.
 :::
 
-### raw `DevEnvironment`
+### «Сырой» `DevEnvironment`
 
-If the environment does not implement the `RunnableDevEnvironment` or `FetchableDevEnvironment` interfaces, you need to set up the communication manually.
+Если окружение не реализует `RunnableDevEnvironment` или `FetchableDevEnvironment`, связь нужно настроить вручную.
 
-If your code can run in the same runtime as the user modules (i.e., it does not rely on Node.js-specific APIs), you can use a virtual module. This approach eliminates the need to access the value from the code using Vite's APIs.
+Если ваш код может работать в том же рантайме, что и пользовательские модули (не зависит от API, специфичных для Node.js), можно использовать виртуальный модуль. Тогда не нужно доставать значения через API Vite из кода.
 
 ```ts
 // code using the Vite's APIs
@@ -207,7 +207,7 @@ export function createHandler(input) {
 }
 ```
 
-For example, to call `transformIndexHtml` on the user module, the following plugin can be used:
+Например, чтобы вызвать `transformIndexHtml` на пользовательском модуле, можно использовать такой плагин:
 
 ```ts {13-21}
 function vitePluginVirtualIndexHtml(): Plugin {
@@ -238,7 +238,7 @@ function vitePluginVirtualIndexHtml(): Plugin {
 }
 ```
 
-If your code requires Node.js APIs, you can use `hot.send` to communicate with the code that uses Vite's APIs from the user modules. However, be aware that this approach may not work the same way after the build process.
+Если нужны API Node.js, можно использовать `hot.send` для связи кода с API Vite и пользовательскими модулями. Учтите: после сборки поведение может отличаться.
 
 ```ts
 // code using the Vite's APIs
@@ -301,11 +301,11 @@ export function createHandler(input) {
 }
 ```
 
-## Environments During Build
+## Окружения при сборке
 
-In the CLI, calling `vite build` and `vite build --ssr` will still build the client only and ssr only environments for backward compatibility.
+В CLI вызовы `vite build` и `vite build --ssr` по-прежнему собирают только client и только ssr ради обратной совместимости.
 
-When `builder` option is not `undefined` (or when calling `vite build --app`), `vite build` will opt-in into building the entire app instead. This would later on become the default in a future major. A `ViteBuilder` instance will be created (build-time equivalent to a `ViteDevServer`) to build all configured environments for production. By default the build of environments is run in series respecting the order of the `environments` record. A framework or user can further configure how the environments are built using `builder.buildApp` option:
+Когда опция `builder` не `undefined` (или при вызове `vite build --app`), `vite build` переключается на сборку всего приложения. В будущем мажоре это станет поведением по умолчанию. Создаётся экземпляр `ViteBuilder` (аналог `ViteDevServer` на этапе сборки), который собирает все настроенные окружения для продакшена. По умолчанию окружения собираются последовательно в порядке записи `environments`. Дополнительно порядок можно задать через `builder.buildApp`:
 
 ```js [vite.config.js]
 import { defineConfig } from 'vite'
@@ -322,8 +322,8 @@ export default defineConfig({
 })
 ```
 
-Plugins can also define a `buildApp` hook. Order `'pre'` and `null` are executed before the configured `builder.buildApp`, and order `'post'` hooks are executed after it. `environment.isBuilt` can be used to check if an environment has already being build.
+Плагины могут объявить хук `buildApp`. Порядки `'pre'` и `null` выполняются до настроенного `builder.buildApp`, порядок `'post'` — после. `environment.isBuilt` показывает, собрано ли окружение уже.
 
-## Environment Agnostic Code
+## Код, не зависящий от окружения
 
-Most of the time, the current `environment` instance will be available as part of the context of the code being run so the need to access them through `server.environments` should be rare. For example, inside plugin hooks the environment is exposed as part of the `PluginContext`, so it can be accessed using `this.environment`. See [Environment API for Plugins](./api-environment-plugins.md) to learn about how to build environment aware plugins.
+Чаще всего текущий экземпляр `environment` будет в контексте выполняемого кода, и обращаться к `server.environments` редко нужно. В хуках плагинов окружение есть в `PluginContext` как `this.environment`. См. [Environment API для плагинов](./api-environment-plugins.md), чтобы строить плагины с учётом окружения.

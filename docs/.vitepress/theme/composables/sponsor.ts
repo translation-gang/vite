@@ -16,7 +16,7 @@ interface Sponsors {
   bronze: Sponsor[]
 }
 
-// общие данные между экземплярами — загружаем один раз
+// shared data across instances so we load only once.
 const data = ref<SponsorTier[]>()
 
 const dataHost = 'https://sponsors.vuejs.org'
@@ -30,13 +30,13 @@ export const voidZero = {
 
 const viteSponsors: Pick<Sponsors, 'special' | 'gold'> = {
   special: [
-    // спонсор patak-dev
+    // sponsors patak-dev
     {
       name: 'Bolt',
       url: 'https://bolt.new',
       img: boltSvg,
     },
-    // спонсор antfu
+    // sponsors antfu
     {
       name: 'NuxtLabs',
       url: 'https://nuxtlabs.com',
@@ -44,7 +44,7 @@ const viteSponsors: Pick<Sponsors, 'special' | 'gold'> = {
     },
   ],
   gold: [
-    // также подтягивается с sponsors.vuejs.org
+    // now automated via sponsors.vuejs.org too
   ],
 }
 
@@ -96,17 +96,17 @@ export function useSponsor() {
 function mapSponsors(sponsors: Sponsors): SponsorTier[] {
   return [
     {
-      tier: 'в партнёрстве с',
+      tier: 'in partnership with',
       size: 'big' as const,
       items: viteSponsors['special'],
     },
     {
-      tier: 'Платиновые спонсоры',
+      tier: 'Platinum Sponsors',
       size: 'big' as const,
       items: mapImgPath(sponsors['platinum']),
     },
     {
-      tier: 'Золотые спонсоры',
+      tier: 'Gold Sponsors',
       size: 'medium' as const,
       items: [...mapImgPath(sponsors['gold']), ...viteSponsors['gold']],
     },

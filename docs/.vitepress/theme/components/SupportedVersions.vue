@@ -6,11 +6,11 @@ declare const __VITE_VERSION__: string
 // Constants
 const supportedVersionMessage = {
   color: 'var(--vp-c-brand-1)',
-  text: 'поддерживается',
+  text: 'supported',
 }
 const notSupportedVersionMessage = {
   color: 'var(--vp-c-danger-1)',
-  text: 'не поддерживается',
+  text: 'not supported',
 }
 const previousMajorLatestMinors: Record<string, string> = {
   '2': '2.9',
@@ -91,7 +91,7 @@ function versionsToText(versions: string[]) {
   if (versions.length === 0) return ''
   if (versions.length === 1) return versions[0]
   return (
-    versions.slice(0, -1).join(', ') + ' и ' + versions[versions.length - 1]
+    versions.slice(0, -1).join(', ') + ' and ' + versions[versions.length - 1]
   )
 }
 
@@ -107,30 +107,30 @@ function isValidViteVersion(version: string) {
   <div>
     <ul>
       <li v-if="supportInfo.regularPatches.length">
-        Обычные патчи выпускаются для
+        Regular patches are released for
         <span v-html="versionsToText(supportInfo.regularPatches)"></span>.
       </li>
       <li v-if="supportInfo.importantFixes.length">
-        Важные исправления и патчи безопасности бэкпортируются в
+        Important fixes and security patches are backported to
         <span v-html="versionsToText(supportInfo.importantFixes)"></span>.
       </li>
       <li v-if="supportInfo.securityPatches.length">
-        Патчи безопасности также бэкпортируются в
+        Security patches are also backported to
         <span v-html="versionsToText(supportInfo.securityPatches)"></span>.
       </li>
       <li>
-        Все версии раньше перечисленных больше не поддерживаются. Обновитесь,
-        чтобы получать исправления.
+        All versions before these are no longer supported. Users should upgrade
+        to receive updates.
       </li>
     </ul>
     <p>
-      Если вы используете Vite
+      If you're using Vite
       <input
         class="checked-input"
         type="text"
         v-model="checkedVersion"
         placeholder="0.0.0"
-      />, эта версия
+      />, it is
       <strong :style="{ color: checkedResult.color }">{{
         checkedResult.text
       }}</strong

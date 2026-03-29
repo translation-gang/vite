@@ -38,7 +38,7 @@ const installTabs = [
           target="_blank"
         >
           <span class="text-grey text-xs font-mono uppercase tracking-wide"
-            >От</span
+            >By</span
           >
           <img
             src="@assets/logos/voidzero-light.svg"
@@ -47,15 +47,15 @@ const installTabs = [
           />
         </a>
         <h1 class="text-white text-pretty max-w-[25rem]">
-          Инструмент сборки для веба
+          The Build Tool for the Web
         </h1>
         <p class="text-white/70 md:text-lg max-w-[27rem] text-pretty">
-          Vite — невероятно быстрый инструмент сборки фронтенда для нового
-          поколения веб-приложений.
+          Vite is a blazing fast frontend build tool powering the next
+          generation of web applications.
         </p>
         <div class="flex items-center gap-5 mt-8">
           <a href="/guide/" class="button button--primary inline-block w-fit">
-            Начать
+            Get Started
           </a>
           <a
             href="https://github.com/vitejs/vite"
@@ -63,7 +63,7 @@ const installTabs = [
             rel="noopener noreferrer"
             class="button inline-block w-fit"
           >
-            Смотреть на GitHub
+            View on GitHub
           </a>
         </div>
       </div>

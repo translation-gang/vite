@@ -1,16 +1,16 @@
 # JavaScript API
 
-API Vite полностью типизированы; удобно использовать TypeScript или проверку типов в VS Code.
+Vite's JavaScript APIs are fully typed, and it's recommended to use TypeScript or enable JS type checking in VS Code to leverage the intellisense and validation.
 
 ## `createServer`
 
-**Сигнатура типа:**
+**Type Signature:**
 
 ```ts
 async function createServer(inlineConfig?: InlineConfig): Promise<ViteDevServer>
 ```
 
-**Пример:**
+**Example Usage:**
 
 ```ts twoslash
 import { createServer } from 'vite'
@@ -29,15 +29,15 @@ server.printUrls()
 server.bindCLIShortcuts({ print: true })
 ```
 
-::: tip ПРИМЕЧАНИЕ
-Если в одном процессе Node вызываются `createServer` и `build`, оба завязаны на `process.env.NODE_ENV` и на опцию `mode`. Чтобы избежать конфликтов, задайте одинаковый `process.env.NODE_ENV` или `mode` в `development`, либо запускайте API в отдельных дочерних процессах.
+::: tip NOTE
+When using `createServer` and `build` in the same Node.js process, both functions rely on `process.env.NODE_ENV` to work properly, which also depends on the `mode` config option. To prevent conflicting behavior, set `process.env.NODE_ENV` or the `mode` of the two APIs to `development`. Otherwise, you can spawn a child process to run the APIs separately.
 :::
 
-::: tip ПРИМЕЧАНИЕ
-При [режиме middleware](/config/server-options.html#server-middlewaremode) вместе с [прокси для WebSocket](/config/server-options.html#server-proxy) в `middlewareMode` нужно передать родительский HTTP-сервер, чтобы прокси корректно привязался к WebSocket.
+::: tip NOTE
+When using [middleware mode](/config/server-options.html#server-middlewaremode) combined with [proxy config for WebSocket](/config/server-options.html#server-proxy), the parent http server should be provided in `middlewareMode` to bind the proxy correctly.
 
 <details>
-<summary>Пример</summary>
+<summary>Example</summary>
 
 ```ts twoslash
 import http from 'http'
@@ -71,16 +71,16 @@ parentServer.use(vite.middlewares)
 
 ## `InlineConfig`
 
-Интерфейс `InlineConfig` расширяет `UserConfig`:
+The `InlineConfig` interface extends `UserConfig` with additional properties:
 
-- `configFile`: путь к конфигу. Если не задан, Vite ищет файл от корня проекта. `false` — отключить авто-поиск.
+- `configFile`: specify config file to use. If not set, Vite will try to automatically resolve one from project root. Set to `false` to disable auto resolving.
 
 ## `ResolvedConfig`
 
-Совпадает с `UserConfig`, но поля, как правило, разрешены и не `undefined`. Плюс утилиты:
+The `ResolvedConfig` interface has all the same properties of a `UserConfig`, except most properties are resolved and non-undefined. It also contains utilities like:
 
-- `config.assetsInclude`: проверка, считается ли `id` ассетом.
-- `config.logger`: внутренний логгер Vite.
+- `config.assetsInclude`: A function to check if an `id` is considered an asset.
+- `config.logger`: Vite's internal logger object.
 
 ## `ViteDevServer`
 
@@ -190,12 +190,12 @@ interface ViteDevServer {
 ```
 
 :::info
-`waitForRequestsIdle` — запасной механизм для DX в сценариях, которые плохо укладываются в по-требованию модель dev-сервера. Например, Tailwind при старте может отложить генерацию классов, пока не увиден код приложения, чтобы не мигали стили. В хуке load/transform при HTTP/1 и дефолтном сервере один из шести каналов может блокироваться, пока не обработаны все статические импорты. Оптимизатор зависимостей Vite использует эту функцию, чтобы избежать полной перезагрузки при отсутствующих зависимостях. В будущем стратегия может смениться, например `optimizeDeps.crawlUntilStaticImports: false` по умолчанию ради холодного старта на больших приложениях.
+`waitForRequestsIdle` is meant to be used as a escape hatch to improve DX for features that can't be implemented following the on-demand nature of the Vite dev server. It can be used during startup by tools like Tailwind to delay generating the app CSS classes until the app code has been seen, avoiding flashes of style changes. When this function is used in a load or transform hook, and the default HTTP1 server is used, one of the six http channels will be blocked until the server processes all static imports. Vite's dependency optimizer currently uses this function to avoid full-page reloads on missing dependencies by delaying loading of pre-bundled dependencies until all imported dependencies have been collected from static imported sources. Vite may switch to a different strategy in a future major release, setting `optimizeDeps.crawlUntilStaticImports: false` by default to avoid the performance hit in large applications during cold start.
 :::
 
 ## `build`
 
-**Сигнатура типа:**
+**Type Signature:**
 
 ```ts
 async function build(
@@ -203,7 +203,7 @@ async function build(
 ): Promise<RollupOutput | RollupOutput[]>
 ```
 
-**Пример:**
+**Example Usage:**
 
 ```ts twoslash [vite.config.js]
 import path from 'node:path'
@@ -222,13 +222,13 @@ await build({
 
 ## `preview`
 
-**Сигнатура типа:**
+**Type Signature:**
 
 ```ts
 async function preview(inlineConfig?: InlineConfig): Promise<PreviewServer>
 ```
 
-**Пример:**
+**Example Usage:**
 
 ```ts twoslash
 import { preview } from 'vite'
@@ -284,7 +284,7 @@ interface PreviewServer {
 
 ## `resolveConfig`
 
-**Сигнатура типа:**
+**Type Signature:**
 
 ```ts
 async function resolveConfig(
@@ -296,11 +296,11 @@ async function resolveConfig(
 ): Promise<ResolvedConfig>
 ```
 
-`command` — `serve` в dev и preview, `build` при сборке.
+The `command` value is `serve` in dev and preview, and `build` in build.
 
 ## `mergeConfig`
 
-**Сигнатура типа:**
+**Type Signature:**
 
 ```ts
 function mergeConfig(
@@ -310,12 +310,12 @@ function mergeConfig(
 ): Record<string, any>
 ```
 
-Глубокое слияние двух конфигов Vite. `isRoot` — уровень вложенности (для слияния двух объектов `build` передайте `false`).
+Deeply merge two Vite configs. `isRoot` represents the level within the Vite config which is being merged. For example, set `false` if you're merging two `build` options.
 
-::: tip ПРИМЕЧАНИЕ
-`mergeConfig` принимает только объектный конфиг. Если конфиг в виде функции — сначала вызовите её.
+::: tip NOTE
+`mergeConfig` accepts only config in object form. If you have a config in callback form, you should call it before passing into `mergeConfig`.
 
-С `defineConfig` можно объединить функциональный и объектный конфиг:
+You can use the `defineConfig` helper to merge a config in callback form with another config:
 
 ```ts twoslash
 import {
@@ -337,7 +337,7 @@ export default defineConfig((configEnv) =>
 
 ## `searchForWorkspaceRoot`
 
-**Сигнатура типа:**
+**Type Signature:**
 
 ```ts
 function searchForWorkspaceRoot(
@@ -346,18 +346,18 @@ function searchForWorkspaceRoot(
 ): string
 ```
 
-**Связано:** [server.fs.allow](/config/server-options.md#server-fs-allow)
+**Related:** [server.fs.allow](/config/server-options.md#server-fs-allow)
 
-Ищет корень workspace, если выполняется одно из условий, иначе возвращает `root`:
+Search for the root of the potential workspace if it meets the following conditions, otherwise it would fallback to `root`:
 
-- в `package.json` есть поле `workspaces`;
-- есть один из файлов:
+- contains `workspaces` field in `package.json`
+- contains one of the following file
   - `lerna.json`
   - `pnpm-workspace.yaml`
 
 ## `loadEnv`
 
-**Сигнатура типа:**
+**Type Signature:**
 
 ```ts
 function loadEnv(
@@ -367,25 +367,25 @@ function loadEnv(
 ): Record<string, string>
 ```
 
-**Связано:** [файлы `.env`](./env-and-mode.md#env-files)
+**Related:** [`.env` Files](./env-and-mode.md#env-files)
 
-Загружает `.env` из `envDir`. По умолчанию — переменные с префиксом `VITE_`, если не задано иное в `prefixes`.
+Load `.env` files within the `envDir`. By default, only env variables prefixed with `VITE_` are loaded, unless `prefixes` is changed.
 
 ## `normalizePath`
 
-**Сигнатура типа:**
+**Type Signature:**
 
 ```ts
 function normalizePath(id: string): string
 ```
 
-**Связано:** [Нормализация путей](./api-plugin.md#path-normalization)
+**Related:** [Path Normalization](./api-plugin.md#path-normalization)
 
-Нормализует путь для согласованности между плагинами Vite.
+Normalizes a path to interoperate between Vite plugins.
 
 ## `transformWithOxc`
 
-**Сигнатура типа:**
+**Type Signature:**
 
 ```ts
 async function transformWithOxc(
@@ -396,11 +396,11 @@ async function transformWithOxc(
 ): Promise<Omit<OxcTransformResult, 'errors'> & { warnings: string[] }>
 ```
 
-Трансформация JS/TS через [Oxc Transformer](https://oxc.rs/docs/guide/usage/transformer). Удобно плагинам, которым нужно совпадение с внутренней трансформацией Vite.
+Transform JavaScript or TypeScript with [Oxc Transformer](https://oxc.rs/docs/guide/usage/transformer). Useful for plugins that prefer matching Vite's internal Oxc Transformer transform.
 
 ## `transformWithEsbuild`
 
-**Сигнатура типа:**
+**Type Signature:**
 
 ```ts
 async function transformWithEsbuild(
@@ -411,13 +411,13 @@ async function transformWithEsbuild(
 ): Promise<ESBuildTransformResult>
 ```
 
-**Устарело:** используйте `transformWithOxc`.
+**Deprecated:** Use `transformWithOxc` instead.
 
-Трансформация через esbuild для согласованности со старым поведением.
+Transform JavaScript or TypeScript with esbuild. Useful for plugins that prefer matching Vite's internal esbuild transform.
 
 ## `loadConfigFromFile`
 
-**Сигнатура типа:**
+**Type Signature:**
 
 ```ts
 async function loadConfigFromFile(
@@ -433,13 +433,13 @@ async function loadConfigFromFile(
 } | null>
 ```
 
-Ручная загрузка файла конфига Vite через esbuild.
+Load a Vite config file manually with esbuild.
 
 ## `preprocessCSS`
 
-- **Экспериментально:** [обратная связь](https://github.com/vitejs/vite/discussions/13815)
+- **Experimental:** [Give Feedback](https://github.com/vitejs/vite/discussions/13815)
 
-**Сигнатура типа:**
+**Type Signature:**
 
 ```ts
 async function preprocessCSS(
@@ -456,32 +456,32 @@ interface PreprocessCSSResult {
 }
 ```
 
-Препроцессинг `.css`, `.scss`, `.sass`, `.less`, `.styl`, `.stylus` в обычный CSS для браузера или других инструментов. Как и [встроенная поддержка препроцессоров](/guide/features#css-pre-processors), соответствующий препроцессор должен быть установлен.
+Pre-processes `.css`, `.scss`, `.sass`, `.less`, `.styl` and `.stylus` files to plain CSS so it can be used in browsers or parsed by other tools. Similar to the [built-in CSS pre-processing support](/guide/features#css-pre-processors), the corresponding pre-processor must be installed if used.
 
-Тип препроцессора определяется по расширению `filename`. Если имя заканчивается на `.module.{ext}`, считается [CSS module](https://github.com/css-modules/css-modules); в результате будет поле `modules` с маппингом классов.
+The pre-processor used is inferred from the `filename` extension. If the `filename` ends with `.module.{ext}`, it is inferred as a [CSS module](https://github.com/css-modules/css-modules) and the returned result will include a `modules` object mapping the original class names to the transformed ones.
 
-Препроцессинг не резолвит URL в `url()` и `image-set()`.
+Note that pre-processing will not resolve URLs in `url()` or `image-set()`.
 
 ## `version`
 
-**Тип:** `string`
+**Type:** `string`
 
-Текущая версия Vite (например `"8.0.0"`).
+The current version of Vite as a string (e.g. `"8.0.0"`).
 
 ## `rolldownVersion`
 
-**Тип:** `string`
+**Type:** `string`
 
-Версия Rolldown в Vite (например `"1.0.0"`). Реэкспорт [`VERSION`](https://rolldown.rs/reference/Variable.VERSION) из `rolldown`.
+The version of Rolldown used by Vite as a string (e.g. `"1.0.0"`). A re-export of [`VERSION`](https://rolldown.rs/reference/Variable.VERSION) from `rolldown`.
 
 ## `esbuildVersion`
 
-**Тип:** `string`
+**Type:** `string`
 
-Оставлено для обратной совместимости.
+Only kept for backward compatibility.
 
 ## `rollupVersion`
 
-**Тип:** `string`
+**Type:** `string`
 
-Оставлено для обратной совместимости.
+Only kept for backward compatibility.

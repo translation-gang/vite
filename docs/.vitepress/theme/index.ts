@@ -6,7 +6,7 @@ import 'vitepress-plugin-graphviz/style.css'
 import Theme from '@voidzero-dev/vitepress-theme/src/vite'
 import './styles.css'
 
-// компоненты темы
+// components
 import SvgImage from './components/SvgImage.vue'
 import YouTubeVideo from './components/YouTubeVideo.vue'
 import NonInheritBadge from './components/NonInheritBadge.vue'

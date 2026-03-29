@@ -28,12 +28,12 @@ const sponsors = computed(() => {
       width="22"
       height="22"
       src="../../../images/viteconf.svg"
-      alt="Логотип ViteConf"
+      alt="ViteConf Logo"
     />
     <span>
-      <p class="extra-info">Строим вместе</p>
+      <p class="extra-info">Building Together</p>
       <p class="heading">ViteConf 2025</p>
-      <p class="extra-info">Смотреть записи</p>
+      <p class="extra-info">View the replays</p>
     </span>
   </a>
   <VPDocAsideSponsors v-if="data" :data="sponsors" />

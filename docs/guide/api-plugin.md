@@ -1,46 +1,46 @@
-# API плагинов
+# Plugin API
 
-Плагины Vite расширяют интерфейс плагинов Rolldown несколькими опциями, специфичными для Vite. Один плагин Vite можно написать один раз и использовать и в dev, и в build.
+Vite plugins extends Rolldown's plugin interface with a few extra Vite-specific options. As a result, you can write a Vite plugin once and have it work for both dev and build.
 
-**Сначала рекомендуется прочитать [документацию по плагинам Rolldown](https://rolldown.rs/apis/plugin-api), затем разделы ниже.**
+**It is recommended to go through [Rolldown's plugin documentation](https://rolldown.rs/apis/plugin-api) first before reading the sections below.**
 
-## Создание плагина
+## Authoring a Plugin
 
-Vite стремится давать готовые паттерны: перед новым плагином проверьте [руководство по возможностям](/guide/features) и существующие плагины — [совместимые с Rollup](https://github.com/rollup/awesome) и [специфичные для Vite](https://github.com/vitejs/awesome-vite#plugins).
+Vite strives to offer established patterns out of the box, so before creating a new plugin make sure that you check the [Features guide](/guide/features) to see if your need is covered. Also review available community plugins, both in the form of a [compatible Rollup plugin](https://github.com/rollup/awesome) and [Vite Specific plugins](https://github.com/vitejs/awesome-vite#plugins).
 
-Плагин можно описать прямо в `vite.config.js`, отдельный пакет не обязателен. Если плагин оказался полезен — поделитесь им с [экосистемой](https://chat.vite.dev).
+When creating a plugin, you can inline it in your `vite.config.js`. There is no need to create a new package for it. Once you see that a plugin was useful in your projects, consider sharing it to help others [in the ecosystem](https://chat.vite.dev).
 
 ::: tip
-При изучении, отладке и написании плагинов полезен [vite-plugin-inspect](https://github.com/antfu/vite-plugin-inspect): видно промежуточное состояние плагинов Vite. После установки откройте `localhost:5173/__inspect/`. Инструкции — в [документации vite-plugin-inspect](https://github.com/antfu/vite-plugin-inspect).
+When learning, debugging, or authoring plugins, we suggest including [vite-plugin-inspect](https://github.com/antfu/vite-plugin-inspect) in your project. It allows you to inspect the intermediate state of Vite plugins. After installing, you can visit `localhost:5173/__inspect/` to inspect the modules and transformation stack of your project. Check out install instructions in the [vite-plugin-inspect docs](https://github.com/antfu/vite-plugin-inspect).
 ![vite-plugin-inspect](../images/vite-plugin-inspect.webp)
 :::
 
-## Соглашения
+## Conventions
 
-Если плагин не использует специфичные для Vite хуки и может быть [совместимым плагином Rolldown](#rolldown-plugin-compatibility), следуйте [соглашениям об именовании плагинов Rolldown](https://rolldown.rs/apis/plugin-api#conventions).
+If the plugin doesn't use Vite specific hooks and can be implemented as a [Compatible Rolldown Plugin](#rolldown-plugin-compatibility), then it is recommended to use the [Rolldown Plugin naming conventions](https://rolldown.rs/apis/plugin-api#conventions).
 
-- У плагинов Rolldown должно быть понятное имя с префиксом `rolldown-plugin-`.
-- В поле `keywords` в package.json укажите `rolldown-plugin` и `vite-plugin`.
+- Rolldown Plugins should have a clear name with `rolldown-plugin-` prefix.
+- Include `rolldown-plugin` and `vite-plugin` keywords in package.json `keywords` field.
 
-Так плагин можно использовать и в чистом Rolldown/Rollup.
+This exposes the plugin to be also used in pure Rolldown or Rollup based projects.
 
-Только для Vite:
+For Vite only plugins
 
-- Имя с префиксом `vite-plugin-`.
-- Ключевое слово `vite-plugin` в `keywords`.
-- В документации плагина объясните, почему он только для Vite (например, использует специфичные хуки).
+- Vite Plugins should have a clear name with `vite-plugin-` prefix.
+- Include `vite-plugin` keyword in package.json `keywords` field.
+- Include a section in the plugin docs detailing why it is a Vite only plugin (for example, it uses Vite specific plugin hooks).
 
-Если плагин заточен под фреймворк, включите его в префикс:
+If your plugin is only going to work for a particular framework, its name should be included as part of the prefix.
 
-- `vite-plugin-vue-` для Vue
-- `vite-plugin-react-` для React
-- `vite-plugin-svelte-` для Svelte
+- `vite-plugin-vue-` prefix for Vue Plugins
+- `vite-plugin-react-` prefix for React Plugins
+- `vite-plugin-svelte-` prefix for Svelte Plugins
 
-См. также [соглашение о виртуальных модулях](#virtual-modules-convention).
+See also [Virtual Modules Convention](#virtual-modules-convention).
 
-## Настройка плагинов
+## Plugins Config
 
-Плагины добавляют в `devDependencies` и подключают в массиве `plugins`.
+Users will add plugins to the project `devDependencies` and configure them using the `plugins` array option.
 
 ```js [vite.config.js]
 import vitePlugin from 'vite-plugin-feature'
@@ -51,9 +51,9 @@ export default defineConfig({
 })
 ```
 
-Ложные значения в списке плагинов игнорируются — удобно включать/выключать плагины.
+Falsy plugins will be ignored, which can be used to easily activate or deactivate plugins.
 
-В `plugins` можно передать пресет — один элемент, за которым стоит несколько плагинов (например интеграция фреймворка). Массив внутри выравнивается (flatten).
+`plugins` also accepts presets including several plugins as a single element. This is useful for complex features (like framework integration) that are implemented using several plugins. The array will be flattened internally.
 
 ```js
 // framework-plugin
@@ -74,13 +74,13 @@ export default defineConfig({
 })
 ```
 
-## Простые примеры
+## Simple Examples
 
 :::tip
-Обычно плагин Vite/Rolldown/Rollup оформляют фабрикой, возвращающей объект плагина. Фабрика может принимать опции настройки.
+It is common convention to author a Vite/Rolldown/Rollup plugin as a factory function that returns the actual plugin object. The function can accept options which allows users to customize the behavior of the plugin.
 :::
 
-### Трансформация своих типов файлов
+### Transforming Custom File Types
 
 ```js
 const fileRegex = /\.(my-file-ext)$/
@@ -104,13 +104,13 @@ export default function myPlugin() {
 }
 ```
 
-### Импорт виртуального файла
+### Importing a Virtual File
 
-Пример в [следующем разделе](#virtual-modules-convention).
+See the example in the [next section](#virtual-modules-convention).
 
-## Соглашение о виртуальных модулях {#virtual-modules-convention}
+## Virtual Modules Convention
 
-Виртуальные модули передают в исходники информацию времени сборки через обычный синтаксис ESM-импорта.
+Virtual modules are a useful scheme that allows you to pass build time information to the source files using normal ESM import syntax.
 
 ```js
 import { exactRegex } from '@rolldown/pluginutils'
@@ -137,7 +137,7 @@ export default function myPlugin() {
 }
 ```
 
-Импорт в JavaScript:
+Which allows importing the module in JavaScript:
 
 ```js
 import { msg } from 'virtual:my-module'
@@ -145,50 +145,50 @@ import { msg } from 'virtual:my-module'
 console.log(msg)
 ```
 
-Для пользовательского пути виртуальные модули в Vite (и Rolldown/Rollup) по соглашению начинаются с `virtual:`. По возможности используйте имя плагина как пространство имён. Например, `vite-plugin-posts` может предлагать `virtual:posts` или `virtual:posts/helpers`. Внутри при resolve id виртуального модуля к нему добавляют префикс `\0` (соглашение экосистемы Rollup): другие плагины не пытаются резолвить такой id как обычный файл, sourcemap’ы различают виртуальные и обычные модули. `\0` нельзя в URL импорта, поэтому при анализе импортов id кодируется; в dev в браузере `\0{id}` становится `/@id/__x00__{id}`. Перед конвейером плагинов id снова декодируется — в коде хуков это не видно.
+Virtual modules in Vite (and Rolldown / Rollup) are prefixed with `virtual:` for the user-facing path by convention. If possible the plugin name should be used as a namespace to avoid collisions with other plugins in the ecosystem. For example, a `vite-plugin-posts` could ask users to import a `virtual:posts` or `virtual:posts/helpers` virtual modules to get build time information. Internally, plugins that use virtual modules should prefix the module ID with `\0` while resolving the id, a convention from the rollup ecosystem. This prevents other plugins from trying to process the id (like node resolution), and core features like sourcemaps can use this info to differentiate between virtual modules and regular files. `\0` is not a permitted char in import URLs so we have to replace them during import analysis. A `\0{id}` virtual id ends up encoded as `/@id/__x00__{id}` during dev in the browser. The id will be decoded back before entering the plugins pipeline, so this is not seen by plugins hooks code.
 
-Модули, производные от реального файла (например скрипт в SFC `.vue`/`.svelte`), этому соглашению не обязаны: подмодули SFC маппятся на ФС, `\0` для них сломал бы sourcemap’ы.
+Note that modules directly derived from a real file, as in the case of a script module in a Single File Component (like a .vue or .svelte SFC) don't need to follow this convention. SFCs generally generate a set of submodules when processed but the code in these can be mapped back to the filesystem. Using `\0` for these submodules would prevent sourcemaps from working correctly.
 
-## Универсальные хуки
+## Universal Hooks
 
-В dev dev-сервер Vite создаёт контейнер плагинов и вызывает [Rolldown Build Hooks](https://rolldown.rs/apis/plugin-api#build-hooks) так же, как Rolldown.
+During dev, the Vite dev server creates a plugin container that invokes [Rolldown Build Hooks](https://rolldown.rs/apis/plugin-api#build-hooks) the same way Rolldown does it.
 
-Следующие хуки вызываются один раз при старте сервера:
+The following hooks are called once on server start:
 
 - [`options`](https://rolldown.rs/reference/interface.plugin#options)
 - [`buildStart`](https://rolldown.rs/reference/Interface.Plugin#buildstart)
 
-Следующие хуки — на каждый запрос модуля:
+The following hooks are called on each incoming module request:
 
 - [`resolveId`](https://rolldown.rs/reference/Interface.Plugin#resolveid)
 - [`load`](https://rolldown.rs/reference/Interface.Plugin#load)
 - [`transform`](https://rolldown.rs/reference/Interface.Plugin#transform)
 
-У этих хуков расширенный параметр `options` с полями, специфичными для Vite. Подробнее — в [документации по SSR](/guide/ssr#ssr-specific-plugin-logic).
+These hooks also have an extended `options` parameter with additional Vite-specific properties. You can read more in the [SSR documentation](/guide/ssr#ssr-specific-plugin-logic).
 
-У части вызовов `resolveId` поле `importer` может быть абсолютным путём к корневому `index.html`: в режиме без бандла не всегда удаётся восстановить реального импортёра. Для импортов внутри пайплайна resolve Vite `importer` отслеживается на этапе анализа импорта.
+Some `resolveId` calls' `importer` value may be an absolute path for a generic `index.html` at root as it's not always possible to derive the actual importer due to Vite's unbundled dev server pattern. For imports handled within Vite's resolve pipeline, the importer can be tracked during the import analysis phase, providing the correct `importer` value.
 
-При закрытии сервера вызываются:
+The following hooks are called when the server is closed:
 
 - [`buildEnd`](https://rolldown.rs/reference/Interface.Plugin#buildend)
 - [`closeBundle`](https://rolldown.rs/reference/Interface.Plugin#closebundle)
 
-Хук [`moduleParsed`](https://rolldown.rs/reference/Interface.Plugin#moduleparsed) в **dev не вызывается** — Vite избегает полного разбора AST ради производительности.
+Note that the [`moduleParsed`](https://rolldown.rs/reference/Interface.Plugin#moduleparsed) hook is **not** called during dev, because Vite avoids full AST parses for better performance.
 
-[Output Generation Hooks](https://rolldown.rs/apis/plugin-api#output-generation-hooks) (кроме `closeBundle`) в **dev не вызываются**.
+[Output Generation Hooks](https://rolldown.rs/apis/plugin-api#output-generation-hooks) (except `closeBundle`) are **not** called during dev.
 
-## Специфичные для Vite хуки
+## Vite Specific Hooks
 
-Плагины Vite могут объявлять хуки только для Vite; Rollup их игнорирует.
+Vite plugins can also provide hooks that serve Vite-specific purposes. These hooks are ignored by Rollup.
 
 ### `config`
 
-- **Тип:** `(config: UserConfig, env: { mode: string, command: string }) => UserConfig | null | void`
-- **Вид:** `async`, `sequential`
+- **Type:** `(config: UserConfig, env: { mode: string, command: string }) => UserConfig | null | void`
+- **Kind:** `async`, `sequential`
 
-  Изменяет конфиг Vite до его финального разрешения. На вход — сырой пользовательский конфиг (CLI + файл) и окружение конфига с `mode` и `command`. Можно вернуть частичный объект для глубокого слияния или мутировать конфиг, если слияния недостаточно.
+  Modify Vite config before it's resolved. The hook receives the raw user config (CLI options merged with config file) and the current config env which exposes the `mode` and `command` being used. It can return a partial config object that will be deeply merged into existing config, or directly mutate the config (if the default merging cannot achieve the desired result).
 
-  **Пример:**
+  **Example:**
 
   ```js
   // return partial config (recommended)
@@ -214,18 +214,18 @@ console.log(msg)
   })
   ```
 
-  ::: warning Примечание
-  Пользовательские плагины резолвятся до этого хука, поэтому добавление плагинов внутри хука `config` не сработает.
+  ::: warning Note
+  User plugins are resolved before running this hook so injecting other plugins inside the `config` hook will have no effect.
   :::
 
 ### `configResolved`
 
-- **Тип:** `(config: ResolvedConfig) => void | Promise<void>`
-- **Вид:** `async`, `parallel`
+- **Type:** `(config: ResolvedConfig) => void | Promise<void>`
+- **Kind:** `async`, `parallel`
 
-  Вызывается после разрешения конфига Vite. Удобно сохранить итоговый конфиг и ветвить логику по команде.
+  Called after the Vite config is resolved. Use this hook to read and store the final resolved config. It is also useful when the plugin needs to do something different based on the command being run.
 
-  **Пример:**
+  **Example:**
 
   ```js
   const examplePlugin = () => {
@@ -251,15 +251,15 @@ console.log(msg)
   }
   ```
 
-  В dev `command` равен `serve` (в CLI это `vite`, `vite dev`, `vite serve`).
+  Note that the `command` value is `serve` in dev (in the cli `vite`, `vite dev`, and `vite serve` are aliases).
 
 ### `configureServer`
 
-- **Тип:** `(server: ViteDevServer) => (() => void) | void | Promise<(() => void) | void>`
-- **Вид:** `async`, `sequential`
-- **См. также:** [ViteDevServer](./api-javascript#vitedevserver)
+- **Type:** `(server: ViteDevServer) => (() => void) | void | Promise<(() => void) | void>`
+- **Kind:** `async`, `sequential`
+- **See also:** [ViteDevServer](./api-javascript#vitedevserver)
 
-  Настройка dev-сервера. Чаще всего — свои middleware для внутреннего приложения [connect](https://github.com/senchalabs/connect):
+  Hook for configuring the dev server. The most common use case is adding custom middlewares to the internal [connect](https://github.com/senchalabs/connect) app:
 
   ```js
   const myPlugin = () => ({
@@ -272,9 +272,9 @@ console.log(msg)
   })
   ```
 
-  **Middleware после встроенных**
+  **Injecting Post Middleware**
 
-  `configureServer` вызывается до установки внутренних middleware, поэтому ваши middleware по умолчанию идут раньше встроенных. Чтобы выполнить middleware **после** внутренних, верните из `configureServer` функцию — её вызовут после установки встроенных middleware:
+  The `configureServer` hook is called before internal middlewares are installed, so the custom middlewares will run before internal middlewares by default. If you want to inject a middleware **after** internal middlewares, you can return a function from `configureServer`, which will be called after internal middlewares are installed:
 
   ```js
   const myPlugin = () => ({
@@ -291,9 +291,9 @@ console.log(msg)
   })
   ```
 
-  **Сохранение ссылки на сервер**
+  **Storing Server Access**
 
-  Другим хукам может понадобиться экземпляр dev-сервера (WebSocket, watcher, граф модулей). Здесь можно сохранить `server` для последующих хуков:
+  In some cases, other plugin hooks may need access to the dev server instance (e.g. accessing the WebSocket server, the file system watcher, or the module graph). This hook can also be used to store the server instance for access in other hooks:
 
   ```js
   const myPlugin = () => {
@@ -312,15 +312,15 @@ console.log(msg)
   }
   ```
 
-  При production-сборке `configureServer` не вызывается — в других хуках учитывайте отсутствие сервера.
+  Note `configureServer` is not called when running the production build so your other hooks need to guard against its absence.
 
 ### `configurePreviewServer`
 
-- **Тип:** `(server: PreviewServer) => (() => void) | void | Promise<(() => void) | void>`
-- **Вид:** `async`, `sequential`
-- **См. также:** [PreviewServer](./api-javascript#previewserver)
+- **Type:** `(server: PreviewServer) => (() => void) | void | Promise<(() => void) | void>`
+- **Kind:** `async`, `sequential`
+- **See also:** [PreviewServer](./api-javascript#previewserver)
 
-  То же, что [`configureServer`](/guide/api-plugin.html#configureserver), но для preview-сервера. `configurePreviewServer` вызывается до остальных middleware; чтобы вставить middleware **после**, верните функцию — её вызовут после внутренних middleware:
+  Same as [`configureServer`](/guide/api-plugin.html#configureserver) but for the preview server. Similarly to `configureServer`, the `configurePreviewServer` hook is called before other middlewares are installed. If you want to inject a middleware **after** other middlewares, you can return a function from `configurePreviewServer`, which will be called after internal middlewares are installed:
 
   ```js
   const myPlugin = () => ({
@@ -339,19 +339,19 @@ console.log(msg)
 
 ### `transformIndexHtml`
 
-- **Тип:** `IndexHtmlTransformHook | { order?: 'pre' | 'post', handler: IndexHtmlTransformHook }`
-- **Вид:** `async`, `sequential`
+- **Type:** `IndexHtmlTransformHook | { order?: 'pre' | 'post', handler: IndexHtmlTransformHook }`
+- **Kind:** `async`, `sequential`
 
-  Трансформация HTML-входов вроде `index.html`. На вход — строка HTML и контекст: в dev доступен [`ViteDevServer`](./api-javascript#vitedevserver), при сборке — бандл Rollup.
+  Dedicated hook for transforming HTML entry point files such as `index.html`. The hook receives the current HTML string and a transform context. The context exposes the [`ViteDevServer`](./api-javascript#vitedevserver) instance during dev, and exposes the Rollup output bundle during build.
 
-  Хук может быть async и возвращать:
-  - строку HTML;
-  - массив дескрипторов тегов (`{ tag, attrs, children }`) для вставки в HTML (позиция вставки настраивается, по умолчанию — prepend в `<head>`);
-  - объект `{ html, tags }`.
+  The hook can be async and can return one of the following:
+  - Transformed HTML string
+  - An array of tag descriptor objects (`{ tag, attrs, children }`) to inject to the existing HTML. Each tag can also specify where it should be injected to (default is prepending to `<head>`)
+  - An object containing both as `{ html, tags }`
 
-  По умолчанию `order` не задан — хук после базовой трансформации HTML. `order: 'pre'` — до обработки HTML (чтобы скрипт прошёл через пайплайн плагинов). `order: 'post'` — после всех хуков без `order`.
+  By default `order` is `undefined`, with this hook applied after the HTML has been transformed. In order to inject a script that should go through the Vite plugins pipeline, `order: 'pre'` will apply the hook before processing the HTML. `order: 'post'` applies the hook after all hooks with `order` undefined are applied.
 
-  **Базовый пример:**
+  **Basic Example:**
 
   ```js
   const htmlPlugin = () => {
@@ -367,7 +367,7 @@ console.log(msg)
   }
   ```
 
-  **Полная сигнатура хука:**
+  **Full Hook Signature:**
 
   ```ts
   type IndexHtmlTransformHook = (
@@ -406,17 +406,17 @@ console.log(msg)
   }
   ```
 
-  ::: warning Примечание
-  Хук не вызывается, если фреймворк сам обрабатывает входные HTML-файлы (например [SvelteKit](https://github.com/sveltejs/kit/discussions/8269#discussioncomment-4509145)).
+  ::: warning Note
+  This hook won't be called if you are using a framework that has custom handling of entry files (for example [SvelteKit](https://github.com/sveltejs/kit/discussions/8269#discussioncomment-4509145)).
   :::
 
 ### `handleHotUpdate`
 
-- **Тип:** `(ctx: HmrContext) => Array<ModuleNode> | void | Promise<Array<ModuleNode> | void>`
-- **Вид:** `async`, `sequential`
-- **См. также:** [HMR API](./api-hmr)
+- **Type:** `(ctx: HmrContext) => Array<ModuleNode> | void | Promise<Array<ModuleNode> | void>`
+- **Kind:** `async`, `sequential`
+- **See also:** [HMR API](./api-hmr)
 
-  Своя логика HMR. Контекст:
+  Perform custom HMR update handling. The hook receives a context object with the following signature:
 
   ```ts
   interface HmrContext {
@@ -428,14 +428,14 @@ console.log(msg)
   }
   ```
 
-  - `modules` — модули, затронутые изменением файла; массив, потому что один файл может дать несколько обслуживаемых модулей (например Vue SFC).
+  - `modules` is an array of modules that are affected by the changed file. It's an array because a single file may map to multiple served modules (e.g. Vue SFCs).
 
-  - `read` — асинхронное чтение содержимого файла: на части систем событие срабатывает до записи редактора, прямой `fs.readFile` может вернуть пусто; `read` это сглаживает.
+  - `read` is an async read function that returns the content of the file. This is provided because on some systems, the file change callback may fire too fast before the editor finishes updating the file and direct `fs.readFile` will return empty content. The read function passed in normalizes this behavior.
 
-  Варианты поведения хука:
-  - Отфильтровать список модулей для более точного HMR.
+  The hook can choose to:
+  - Filter and narrow down the affected module list so that the HMR is more accurate.
 
-  - Вернуть пустой массив и выполнить полную перезагрузку:
+  - Return an empty array and perform a full reload:
 
     ```js
     handleHotUpdate({ server, modules, timestamp }) {
@@ -454,7 +454,7 @@ console.log(msg)
     }
     ```
 
-  - Вернуть пустой массив и полностью своё HMR через кастомные события клиенту:
+  - Return an empty array and perform complete custom HMR handling by sending custom events to the client:
 
     ```js
     handleHotUpdate({ server }) {
@@ -467,7 +467,7 @@ console.log(msg)
     }
     ```
 
-    На клиенте обработчик через [HMR API](./api-hmr) (можно внедрить из `transform` того же плагина):
+    Client code should register corresponding handler using the [HMR API](./api-hmr) (this could be injected by the same plugin's `transform` hook):
 
     ```js
     if (import.meta.hot) {
@@ -477,15 +477,15 @@ console.log(msg)
     }
     ```
 
-## Мета контекста плагина
+## Plugin Context Meta
 
-В хуках с доступом к контексту плагина у `this.meta` есть дополнительные поля:
+For plugin hooks that has access to the plugin context, Vite exposes additional properties on `this.meta`:
 
-- `this.meta.viteVersion`: строка версии Vite (например `"8.0.0"`).
+- `this.meta.viteVersion`: The current Vite version string (e.g. `"8.0.0"`).
 
-::: tip Как понять, что Vite на Rolldown
+::: tip Detecting Rolldown powered Vite
 
-[`this.meta.rolldownVersion`](https://rolldown.rs/reference/Interface.PluginContextMeta#rolldownversion) есть только у Vite на Rolldown (Vite 8+). По нему можно отличить текущий экземпляр:
+[`this.meta.rolldownVersion`](https://rolldown.rs/reference/Interface.PluginContextMeta#rolldownversion) is only available for Rolldown powered Vite (i.e. Vite 8+). You can use it to detect whether the current Vite instance is powered by Rolldown:
 
 ```ts
 function versionCheckPlugin(): Plugin {
@@ -504,23 +504,23 @@ function versionCheckPlugin(): Plugin {
 
 :::
 
-## Метаданные выходного бандла
+## Output Bundle Metadata
 
-При сборке Vite дополняет объекты вывода Rolldown полем `viteMetadata`.
+During build, Vite augments Rolldown's build output objects with a Vite-specific `viteMetadata` field.
 
-Доступно в:
+This is available through:
 
-- `RenderedChunk` (например `renderChunk`, `augmentChunkHash`)
-- `OutputChunk` и `OutputAsset` (например `generateBundle`, `writeBundle`)
+- `RenderedChunk` (for example in `renderChunk` and `augmentChunkHash`)
+- `OutputChunk` and `OutputAsset` (for example in `generateBundle` and `writeBundle`)
 
-`viteMetadata` содержит:
+`viteMetadata` provides:
 
 - `viteMetadata.importedCss: Set<string>`
 - `viteMetadata.importedAssets: Set<string>`
 
-Полезно плагинам, которым нужны выпущенные CSS и статические ассеты без [`build.manifest`](/config/build-options#build-manifest).
+This is useful when writing plugins that need to inspect emitted CSS and static assets without relying on [`build.manifest`](/config/build-options#build-manifest).
 
-Пример:
+Example:
 
 ```ts [vite.config.ts]
 function outputMetadataPlugin(): Plugin {
@@ -542,23 +542,23 @@ function outputMetadataPlugin(): Plugin {
 }
 ```
 
-## Порядок плагинов
+## Plugin Ordering
 
-У плагина Vite может быть `enforce` (как у лоадеров webpack): `"pre"` или `"post"`. Итоговый порядок:
+A Vite plugin can additionally specify an `enforce` property (similar to webpack loaders) to adjust its application order. The value of `enforce` can be either `"pre"` or `"post"`. The resolved plugins will be in the following order:
 
 - Alias
-- Пользовательские с `enforce: 'pre'`
-- Ядро Vite
-- Пользовательские без `enforce`
-- Плагины сборки Vite
-- Пользовательские с `enforce: 'post'`
-- Пост-обработка Vite (минификация, манифест, отчёты)
+- User plugins with `enforce: 'pre'`
+- Vite core plugins
+- User plugins without enforce value
+- Vite build plugins
+- User plugins with `enforce: 'post'`
+- Vite post build plugins (minify, manifest, reporting)
 
-Порядок хуков внутри плагина по-прежнему задаётся атрибутом [`order`](https://rolldown.rs/reference/TypeAlias.ObjectHook#order) у хуков Rolldown.
+Note that this is separate from hooks ordering, those are still separately subject to their [`order` attribute](https://rolldown.rs/reference/TypeAlias.ObjectHook#order) as usual for Rolldown hooks.
 
-## Условное подключение
+## Conditional Application
 
-По умолчанию плагины вызываются и в serve, и в build. Чтобы ограничить только `'build'` или `'serve'`, используйте `apply`:
+By default plugins are invoked for both serve and build. In cases where a plugin needs to be conditionally applied only during serve or build, use the `apply` property to only invoke them during `'build'` or `'serve'`:
 
 ```js
 function myPlugin() {
@@ -569,7 +569,7 @@ function myPlugin() {
 }
 ```
 
-Точнее — функция:
+A function can also be used for more precise control:
 
 ```js
 apply(config, { command }) {
@@ -578,19 +578,19 @@ apply(config, { command }) {
 }
 ```
 
-## Совместимость с плагинами Rolldown {#rolldown-plugin-compatibility}
+## Rolldown Plugin Compatibility
 
-Многие плагины Rolldown/Rollup работают как плагины Vite (`@rollup/plugin-alias`, `@rollup/plugin-json` и т.д.), но не все: часть хуков бессмысленна для dev без бандла.
+A fair number of Rolldown / Rollup plugins will work directly as a Vite plugin (e.g. `@rollup/plugin-alias` or `@rollup/plugin-json`), but not all of them, since some plugin hooks do not make sense in an unbundled dev server context.
 
-Обычно плагин подходит, если:
+In general, as long as a Rolldown / Rollup plugin fits the following criteria then it should just work as a Vite plugin:
 
-- нет хука [`moduleParsed`](https://rolldown.rs/reference/Interface.Plugin#moduleparsed);
-- нет жёсткой зависимости от опций вроде [`transform.inject`](https://rolldown.rs/reference/InputOptions.transform#inject);
-- нет тесной связи между хуками фазы бандла и фазы вывода.
+- It doesn't use the [`moduleParsed`](https://rolldown.rs/reference/Interface.Plugin#moduleparsed) hook.
+- It doesn't rely on the Rolldown specific options like [`transform.inject`](https://rolldown.rs/reference/InputOptions.transform#inject)
+- It doesn't have strong coupling between bundle-phase hooks and output-phase hooks.
 
-Плагин только для сборки можно указать в `build.rolldownOptions.plugins` — эквивалентно Vite-плагину с `enforce: 'post'` и `apply: 'build'`.
+If a Rolldown / Rollup plugin only makes sense for the build phase, then it can be specified under `build.rolldownOptions.plugins` instead. It will work the same as a Vite plugin with `enforce: 'post'` and `apply: 'build'`.
 
-К существующему плагину можно добавить только Vite-поля:
+You can also augment an existing Rolldown / Rollup plugin with Vite-only properties:
 
 ```js [vite.config.js]
 import example from 'rolldown-plugin-example'
@@ -607,11 +607,11 @@ export default defineConfig({
 })
 ```
 
-## Нормализация путей {#path-normalization}
+## Path Normalization
 
-Vite при resolve id нормализует пути к POSIX-разделителям `/`, сохраняя том в Windows. Rollup по умолчанию оставляет win32-разделители `\\`. Плагины Rollup внутри используют [`normalizePath`](https://github.com/rollup/plugins/tree/master/packages/pluginutils#normalizepath) из `@rollup/pluginutils` перед сравнениями, поэтому `include`/`exclude` с resolved id в Vite часто уже согласованы.
+Vite normalizes paths while resolving ids to use POSIX separators ( / ) while preserving the volume in Windows. On the other hand, Rollup keeps resolved paths untouched by default, so resolved ids have win32 separators ( \\ ) in Windows. However, Rollup plugins use a [`normalizePath` utility function](https://github.com/rollup/plugins/tree/master/packages/pluginutils#normalizepath) from `@rollup/pluginutils` internally, which converts separators to POSIX before performing comparisons. This means that when these plugins are used in Vite, the `include` and `exclude` config pattern and other similar paths against resolved ids comparisons work correctly.
 
-Для своих плагинов Vite при сравнении с resolved id сначала нормализуйте путь к POSIX. Аналог `normalizePath` экспортируется из `vite`.
+So, for Vite plugins, when comparing paths against resolved ids it is important to first normalize the paths to use POSIX separators. An equivalent `normalizePath` utility function is exported from the `vite` module.
 
 ```js
 import { normalizePath } from 'vite'
@@ -620,15 +620,15 @@ normalizePath('foo\\bar') // 'foo/bar'
 normalizePath('foo/bar') // 'foo/bar'
 ```
 
-## Фильтрация, паттерны include/exclude
+## Filtering, include/exclude pattern
 
-Vite реэкспортирует [`createFilter` из `@rollup/pluginutils`](https://github.com/rollup/plugins/tree/master/packages/pluginutils#createfilter) — стандартный паттерн include/exclude, как в ядре Vite.
+Vite exposes [`@rollup/pluginutils`'s `createFilter`](https://github.com/rollup/plugins/tree/master/packages/pluginutils#createfilter) function to encourage Vite specific plugins and integrations to use the standard include/exclude filtering pattern, which is also used in Vite core itself.
 
-### Фильтры хуков
+### Hook Filters
 
-В Rolldown есть [фильтры хуков](https://rolldown.rs/apis/plugin-api/hook-filters), чтобы реже гонять данные между Rust и JS: плагин задаёт паттерны вызова хуков.
+Rolldown introduced a [hook filter feature](https://rolldown.rs/apis/plugin-api/hook-filters) to reduce the communication overhead between the Rust and JavaScript runtimes. This feature allows plugins to specify patterns that determine when hooks should be called, improving performance by avoiding unnecessary hook invocations.
 
-Поддерживается в Rollup 4.38.0+ и Vite 6.3.0+. Для старых версий дублируйте проверку внутри обработчика хука.
+This is also supported by Rollup 4.38.0+ and Vite 6.3.0+. To make your plugin backward compatible with older versions, make sure to also run the filter inside the hook handlers.
 
 ```js
 export default function myPlugin() {
@@ -656,16 +656,16 @@ export default function myPlugin() {
 ```
 
 ::: tip
-В [`@rolldown/pluginutils`](https://www.npmjs.com/package/@rolldown/pluginutils) есть утилиты для фильтров хуков (`exactRegex`, `prefixRegex` и др.); их же удобно брать из `rolldown/filter`.
+[`@rolldown/pluginutils`](https://www.npmjs.com/package/@rolldown/pluginutils) exports some utilities for hook filters like `exactRegex` and `prefixRegex`. These are also re-exported from `rolldown/filter` for convenience.
 :::
 
-## Обмен клиент–сервер {#client-server-communication}
+## Client-server Communication
 
-С Vite 2.9 плагины могут проще общаться с клиентом.
+Since Vite 2.9, we provide some utilities for plugins to help handle the communication with clients.
 
-### Сервер → клиент
+### Server to Client
 
-На стороне плагина — `server.ws.send` для рассылки событий:
+On the plugin side, we could use `server.ws.send` to broadcast events to the client:
 
 ```js [vite.config.js]
 export default defineConfig({
@@ -682,11 +682,11 @@ export default defineConfig({
 })
 ```
 
-::: tip ПРИМЕЧАНИЕ
-**Всегда префиксуйте** имена событий, чтобы не пересекаться с другими плагинами.
+::: tip NOTE
+We recommend **always prefixing** your event names to avoid collisions with other plugins.
 :::
 
-На клиенте — [`hot.on`](/guide/api-hmr.html#hot-on-event-cb):
+On the client side, use [`hot.on`](/guide/api-hmr.html#hot-on-event-cb) to listen to the events:
 
 ```ts twoslash
 import 'vite/client'
@@ -699,9 +699,9 @@ if (import.meta.hot) {
 }
 ```
 
-### Клиент → сервер
+### Client to Server
 
-С клиента на сервер — [`hot.send`](/guide/api-hmr.html#hot-send-event-payload):
+To send events from the client to the server, we can use [`hot.send`](/guide/api-hmr.html#hot-send-event-payload):
 
 ```ts
 // client side
@@ -710,7 +710,7 @@ if (import.meta.hot) {
 }
 ```
 
-На сервере — `server.ws.on`:
+Then use `server.ws.on` and listen to the events on the server side:
 
 ```js [vite.config.js]
 export default defineConfig({
@@ -729,12 +729,12 @@ export default defineConfig({
 })
 ```
 
-### TypeScript для своих событий {#typescript-for-custom-events}
+### TypeScript for Custom Events
 
-Vite выводит тип payload из интерфейса `CustomEventMap`; его можно расширить:
+Internally, vite infers the type of a payload from the `CustomEventMap` interface, it is possible to type custom events by extending the interface:
 
-:::tip Примечание
-Указывайте расширение `.d.ts` у файлов деклараций, иначе TypeScript может не сопоставить модуль.
+:::tip Note
+Make sure to include the `.d.ts` extension when specifying TypeScript declaration files. Otherwise, Typescript may not know which file the module is trying to extend.
 :::
 
 ```ts [events.d.ts]
@@ -748,7 +748,7 @@ declare module 'vite/types/customEvent.d.ts' {
 }
 ```
 
-Расширение используется с `InferCustomEventPayload<T>` для типа payload события `T`. Подробнее — [документация HMR API](./api-hmr#hmr-api).
+This interface extension is utilized by `InferCustomEventPayload<T>` to infer the payload type for event `T`. For more information on how this interface is utilized, refer to the [HMR API Documentation](./api-hmr#hmr-api).
 
 ```ts twoslash
 import 'vite/client'

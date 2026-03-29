@@ -1,25 +1,25 @@
-# Опции оптимизации зависимостей
+# Dep Optimization Options
 
-- **Связано:** [Предсборка зависимостей](/guide/dep-pre-bundling)
+- **Related:** [Dependency Pre-Bundling](/guide/dep-pre-bundling)
 
-Если не указано иное, опции этого раздела применяются только к оптимизатору зависимостей, который используется в dev.
+Unless noted, the options in this section are only applied to the dependency optimizer, which is only used in dev.
 
 ## optimizeDeps.entries <NonInheritBadge />
 
-- **Тип:** `string | string[]`
+- **Type:** `string | string[]`
 
-По умолчанию Vite обходит все `.html` и ищет зависимости для предсборки (пропуская `node_modules`, `build.outDir`, `__tests__` и `coverage`). Если задан `build.rollupOptions.input`, используются эти точки входа.
+By default, Vite will crawl all your `.html` files to detect dependencies that need to be pre-bundled (ignoring `node_modules`, `build.outDir`, `__tests__` and `coverage`). If `build.rollupOptions.input` is specified, Vite will crawl those entry points instead.
 
-Если это не подходит, задайте свои точки входа — значение: [шаблон `tinyglobby`](https://superchupu.dev/tinyglobby/comparison) или массив шаблонов относительно корня проекта Vite. Это заменяет вывод по умолчанию. При явном `optimizeDeps.entries` по умолчанию игнорируются только `node_modules` и `build.outDir`. Другие папки — через префикс `!` в списке. Для шаблонов, явно содержащих `node_modules`, `node_modules` не игнорируется.
+If neither of these fit your needs, you can specify custom entries using this option - the value should be a [`tinyglobby` pattern](https://superchupu.dev/tinyglobby/comparison) or array of patterns that are relative from Vite project root. This will overwrite default entries inference. Only `node_modules` and `build.outDir` folders will be ignored by default when `optimizeDeps.entries` is explicitly defined. If other folders need to be ignored, you can use an ignore pattern as part of the entries list, marked with an initial `!`. `node_modules` will not be ignored for patterns that explicitly include the string `node_modules`.
 
 ## optimizeDeps.exclude <NonInheritBadge />
 
-- **Тип:** `string[]`
+- **Type:** `string[]`
 
-Зависимости, исключаемые из предсборки.
+Dependencies to exclude from pre-bundling.
 
 :::warning CommonJS
-CommonJS-зависимости не следует исключать из оптимизации. Если ESM-зависимость исключена, но у неё вложенная CJS-зависимость, последнюю добавьте в `optimizeDeps.include`. Пример:
+CommonJS dependencies should not be excluded from optimization. If an ESM dependency is excluded from optimization, but has a nested CommonJS dependency, the CommonJS dependency should be added to `optimizeDeps.include`. Example:
 
 ```js twoslash
 import { defineConfig } from 'vite'
@@ -35,11 +35,11 @@ export default defineConfig({
 
 ## optimizeDeps.include <NonInheritBadge />
 
-- **Тип:** `string[]`
+- **Type:** `string[]`
 
-По умолчанию связанные пакеты вне `node_modules` не предсобираются. Эта опция принудительно включает предсборку.
+By default, linked packages not inside `node_modules` are not pre-bundled. Use this option to force a linked package to be pre-bundled.
 
-**Экспериментально:** у библиотек с множеством глубоких импортов можно указать завершающий glob, чтобы предсобрать все глубокие импорты сразу и не пересобирать при каждом новом пути. [Обратная связь](https://github.com/vitejs/vite/discussions/15833). Пример:
+**Experimental:** If you're using a library with many deep imports, you can also specify a trailing glob pattern to pre-bundle all deep imports at once. This will avoid constantly pre-bundling whenever a new deep import is used. [Give Feedback](https://github.com/vitejs/vite/discussions/15833). For example:
 
 ```js twoslash
 import { defineConfig } from 'vite'
@@ -53,60 +53,60 @@ export default defineConfig({
 
 ## optimizeDeps.rolldownOptions <NonInheritBadge />
 
-- **Тип:** <code>Omit<<a href="https://rolldown.rs/reference/Interface.RolldownOptions">RolldownOptions</a>, 'input' | 'logLevel' | 'output'> & { output?: Omit<<a href="https://rolldown.rs/reference/#:~:text=Output%20Options">RolldownOutputOptions</a>, 'format' | 'sourcemap' | 'dir' | 'banner'> }</code>
+- **Type:** <code>Omit<<a href="https://rolldown.rs/reference/Interface.RolldownOptions">RolldownOptions</a>, 'input' | 'logLevel' | 'output'> & { output?: Omit<<a href="https://rolldown.rs/reference/#:~:text=Output%20Options">RolldownOutputOptions</a>, 'format' | 'sourcemap' | 'dir' | 'banner'> }</code>
 
-Опции для Rolldown при сканировании и оптимизации зависимостей.
+Options to pass to Rolldown during the dep scanning and optimization.
 
-Часть опций опущена: их изменение несовместимо с оптимизацией зависимостей Vite.
+Certain options are omitted since changing them would not be compatible with Vite's dep optimization.
 
-- `plugins` объединяются с dep-плагином Vite
+- `plugins` are merged with Vite's dep plugin
 
 ## optimizeDeps.esbuildOptions <NonInheritBadge />
 
-- **Тип:** <code>Omit<<a href="https://esbuild.github.io/api/#general-options">EsbuildBuildOptions</a>, 'bundle' | 'entryPoints' | 'external' | 'write' | 'watch' | 'outdir' | 'outfile' | 'outbase' | 'outExtension' | 'metafile'></code>
-- **Устарело**
+- **Type:** <code>Omit<<a href="https://esbuild.github.io/api/#general-options">EsbuildBuildOptions</a>, 'bundle' | 'entryPoints' | 'external' | 'write' | 'watch' | 'outdir' | 'outfile' | 'outbase' | 'outExtension' | 'metafile'></code>
+- **Deprecated**
 
-Внутри преобразуется в `optimizeDeps.rolldownOptions`. Используйте `optimizeDeps.rolldownOptions`.
+This option is converted to `optimizeDeps.rolldownOptions` internally. Use `optimizeDeps.rolldownOptions` instead.
 
 ## optimizeDeps.force <NonInheritBadge />
 
-- **Тип:** `boolean`
+- **Type:** `boolean`
 
-При `true` — принудительная предсборка, кэш оптимизированных зависимостей игнорируется.
+Set to `true` to force dependency pre-bundling, ignoring previously cached optimized dependencies.
 
 ## optimizeDeps.noDiscovery <NonInheritBadge />
 
-- **Тип:** `boolean`
-- **По умолчанию:** `false`
+- **Type:** `boolean`
+- **Default:** `false`
 
-При `true` автоматическое обнаружение зависимостей отключено; оптимизируются только перечисленные в `optimizeDeps.include`. CJS-only зависимости в dev должны быть в `optimizeDeps.include`.
+When set to `true`, automatic dependency discovery will be disabled and only dependencies listed in `optimizeDeps.include` will be optimized. CJS-only dependencies must be present in `optimizeDeps.include` during dev.
 
 ## optimizeDeps.holdUntilCrawlEnd <NonInheritBadge />
 
-- **Экспериментально:** [Обратная связь](https://github.com/vitejs/vite/discussions/15834)
-- **Тип:** `boolean`
-- **По умолчанию:** `true`
+- **Experimental:** [Give Feedback](https://github.com/vitejs/vite/discussions/15834)
+- **Type:** `boolean`
+- **Default:** `true`
 
-При включении первый результат оптимизации deps удерживается, пока на холодном старте не обойдены все статические импорты. Это снижает полные перезагрузки страницы при появлении новых зависимостей и общих чанков. Если сканер и `include` находят все зависимости, опцию можно отключить, чтобы браузер параллелил запросы.
+When enabled, it will hold the first optimized deps results until all static imports are crawled on cold start. This avoids the need for full-page reloads when new dependencies are discovered and they trigger the generation of new common chunks. If all dependencies are found by the scanner plus the explicitly defined ones in `include`, it is better to disable this option to let the browser process more requests in parallel.
 
 ## optimizeDeps.disabled <NonInheritBadge />
 
-- **Устарело**
-- **Экспериментально:** [Обратная связь](https://github.com/vitejs/vite/discussions/13839)
-- **Тип:** `boolean | 'build' | 'dev'`
-- **По умолчанию:** `'build'`
+- **Deprecated**
+- **Experimental:** [Give Feedback](https://github.com/vitejs/vite/discussions/13839)
+- **Type:** `boolean | 'build' | 'dev'`
+- **Default:** `'build'`
 
-Устарело. С Vite 5.1 предсборка зависимостей при build убрана. `optimizeDeps.disabled: true` или `'dev'` отключает оптимизатор; `false` или `'build'` оставляет оптимизатор в dev включённым.
+This option is deprecated. As of Vite 5.1, pre-bundling of dependencies during build have been removed. Setting `optimizeDeps.disabled` to `true` or `'dev'` disables the optimizer, and configured to `false` or `'build'` leaves the optimizer during dev enabled.
 
-Чтобы полностью отключить оптимизатор: `optimizeDeps.noDiscovery: true` и пустой/не заданный `optimizeDeps.include`.
+To disable the optimizer completely, use `optimizeDeps.noDiscovery: true` to disallow automatic discovery of dependencies and leave `optimizeDeps.include` undefined or empty.
 
 :::warning
-Предсборка при build была **экспериментальной**. Проекты с `@rollup/plugin-commonjs` через `build.commonjsOptions: { include: [] }` получат предупреждение о необходимости снова включить поддержку CJS при бандлинге.
+Optimizing dependencies during build time was an **experimental** feature. Projects trying out this strategy also removed `@rollup/plugin-commonjs` using `build.commonjsOptions: { include: [] }`. If you did so, a warning will guide you to re-enable it to support CJS only packages while bundling.
 :::
 
 ## optimizeDeps.needsInterop <NonInheritBadge />
 
-- **Экспериментально**
-- **Тип:** `string[]`
+- **Experimental**
+- **Type:** `string[]`
 
-Принудительный ESM-interop при импорте этих зависимостей. Vite обычно сам определяет interop; опция редко нужна. Разные комбинации зависимостей могут давать разную предсборку — добавление в `needsInterop` ускоряет холодный старт, избегая полных перезагрузок. При необходимости Vite выведет предупреждение с предложением добавить пакет в массив.
+Forces ESM interop when importing these dependencies. Vite is able to properly detect when a dependency needs interop, so this option isn't generally needed. However, different combinations of dependencies could cause some of them to be prebundled differently. Adding these packages to `needsInterop` can speed up cold start by avoiding full-page reloads. You'll receive a warning if this is the case for one of your dependencies, suggesting to add the package name to this array in your config.

@@ -95,10 +95,10 @@ const testimonials: Testimonial[] = [
       class="flex flex-col sm:flex-row justify-between items-center gap-8 sm:gap-20 text-center sm:text-left"
     >
       <div class="flex flex-col gap-3">
-        <h3 class="text-white max-w-xl text-balance">Любим сообществом</h3>
+        <h3 class="text-white max-w-xl text-balance">Loved by the community</h3>
         <p class="max-w-md text-white/70 text-balance">
-          Не верьте нам на слово — послушайте, что говорят участники сообщества
-          Vite.
+          Don't take our word for it - listen to what Vite community members
+          have to say.
         </p>
       </div>
       <div
@@ -109,14 +109,14 @@ const testimonials: Testimonial[] = [
           <h2 class="text-white">75k+</h2>
           <p class="text-grey flex items-center gap-2">
             <Icon icon="simple-icons:github" width="20px" height="20px" />
-            Звёзды на GitHub
+            Github Stars
           </p>
         </div>
 
         <!-- NPM Downloads -->
         <div class="flex flex-col gap-3">
           <h2 class="text-white">40m+</h2>
-          <p class="text-grey">Загрузок npm в неделю</p>
+          <p class="text-grey">Weekly NPM downloads</p>
         </div>
       </div>
     </div>

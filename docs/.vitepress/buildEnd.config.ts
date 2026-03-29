@@ -10,14 +10,13 @@ const blogUrl = `${siteUrl}/blog`
 export const buildEnd = async (config: SiteConfig): Promise<void> => {
   const feed = new Feed({
     title: 'Vite',
-    description: 'Инструментарий нового поколения для фронтенда',
+    description: 'Next Generation Frontend Tooling',
     id: blogUrl,
     link: blogUrl,
-    language: 'ru',
+    language: 'en',
     image: 'https://vite.dev/og-image.jpg',
     favicon: 'https://vite.dev/logo.svg',
-    copyright:
-      '© 2019–настоящее время VoidZero Inc. и участники проекта Vite',
+    copyright: 'Copyright © 2019-present VoidZero Inc. & Vite Contributors',
   })
 
   const posts = await createContentLoader('blog/*.md', {

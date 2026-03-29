@@ -1,23 +1,23 @@
-# SSR с API `ModuleRunner`
+# SSR Using `ModuleRunner` API
 
-::: tip Обратная связь
-Оставьте отзыв в [обсуждении обратной связи по Environment API](https://github.com/vitejs/vite/discussions/16358)
+::: tip Feedback
+Give us feedback at [Environment API feedback discussion](https://github.com/vitejs/vite/discussions/16358)
 :::
 
-`server.ssrLoadModule` заменён импортом из [Module Runner](/guide/api-environment#modulerunner).
+`server.ssrLoadModule` has been replaced by importing from a [Module Runner](/guide/api-environment#modulerunner).
 
-Затронутая область: `авторы плагинов Vite`
+Affected scope: `Vite Plugin Authors`
 
-::: warning Будущее устаревание
-`ModuleRunner` впервые появился в `v6.0`. Отказ от `server.ssrLoadModule` запланирован на будущую мажорную версию. Чтобы найти использование, установите в конфиге Vite `future.removeSsrLoadModule` в `"warn"`.
+::: warning Future Deprecation
+`ModuleRunner` was first introduced in `v6.0`. The deprecation of `server.ssrLoadModule` is planned for a future major. To identify your usage, set `future.removeSsrLoadModule` to `"warn"` in your vite config.
 :::
 
-## Мотивация
+## Motivation
 
-`server.ssrLoadModule(url)` позволял импортировать модули только в среде `ssr` и выполнять их только в том же процессе, что и Vite dev-сервер. У приложений с пользовательскими средами каждая связана с `ModuleRunner`, который может работать в отдельном потоке или процессе. Для импорта модулей теперь используется `moduleRunner.import(url)`.
+The `server.ssrLoadModule(url)` only allows importing modules in the `ssr` environment and can only execute the modules in the same process as the Vite dev server. For apps with custom environments, each is associated with a `ModuleRunner` that may be running in a separate thread or process. To import modules, we now have `moduleRunner.import(url)`.
 
-## Руководство по миграции
+## Migration Guide
 
-См. [Руководство по Environment API для фреймворков](../guide/api-environment-frameworks.md).
+Check out the [Environment API for Frameworks Guide](../guide/api-environment-frameworks.md).
 
-`server.ssrFixStacktrace` и `server.ssrRewriteStacktrace` не нужно вызывать при использовании API Module Runner. Стеки обновятся, если только `sourcemapInterceptor` не установлен в `false`.
+`server.ssrFixStacktrace` and `server.ssrRewriteStacktrace` do not have to be called when using the Module Runner APIs. The stack traces will be updated unless `sourcemapInterceptor` is set to `false`.

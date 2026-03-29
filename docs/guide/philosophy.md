@@ -1,27 +1,27 @@
-# Философия проекта
+# Project Philosophy
 
-## Лёгкое расширяемое ядро
+## Lean Extendable Core
 
-Vite стремится поддерживать самые распространённые паттерны разработки веб-приложений «из коробки», сохраняя при этом [ядро Vite](https://github.com/vitejs/vite) компактным и удобным для сопровождения в долгую перспективу. Мы считаем, что лучший способ охватить разные сценарии — дать сильные примитивы и API, на которых строятся плагины, и мы активно расширяем ядро, чтобы Vite было проще расширять. [Система плагинов Vite](./api-plugin.md) основана на надмножестве API плагинов Rollup и позволяет использовать такие плагины, как [vite-plugin-pwa](https://vite-pwa-org.netlify.app/) и множество [поддерживаемых плагинов](https://registry.vite.dev/plugins). Сборщик Vite, [Rolldown](https://rolldown.rs/), сохраняет совместимость с интерфейсом плагинов Rollup, поэтому плагины часто можно использовать и в Vite, и в «голом» Rollup.
+Vite aims to support the most common patterns to build Web apps out-of-the-box, while keeping [Vite core](https://github.com/vitejs/vite) lean and maintainable long-term. We believe the best way to support diverse use cases is to provide strong primitives and APIs that plugins can build on, and we actively expand the core to make Vite more extensible. [Vite's plugin system](./api-plugin.md) is based on a superset of Rollup's plugin API, and it enables plugins like [vite-plugin-pwa](https://vite-pwa-org.netlify.app/) and the many [well maintained plugins](https://registry.vite.dev/plugins) available to cover your needs. Vite's bundler, [Rolldown](https://rolldown.rs/), maintains compatibility with Rollup's plugin interface, so plugins can often be used across both Vite and plain Rollup projects.
 
-## Толчок к современному вебу
+## Pushing the Modern Web
 
-Vite даёт осмысленные по умолчанию возможности, которые подталкивают к написанию современного кода. Например:
+Vite provides opinionated features that push writing modern code. For example:
 
-- Исходный код пишется только в ESM; зависимости не в формате ESM нужно [заранее собрать в ESM](./dep-pre-bundling), чтобы они работали.
-- Веб-воркеры рекомендуется писать с синтаксисом [`new Worker`](./features#web-workers), чтобы следовать современным стандартам.
-- Модули Node.js нельзя использовать в браузере.
+- The source code can only be written in ESM, where non-ESM dependencies need to be [pre-bundled as ESM](./dep-pre-bundling) in order to work.
+- Web workers are encouraged to be written with the [`new Worker` syntax](./features#web-workers) to follow modern standards.
+- Node.js modules cannot be used in the browser.
 
-При добавлении новых возможностей эти паттерны сохраняются, чтобы API оставался устойчивым к будущим изменениям, хотя это не всегда совместимо с другими сборщиками.
+When adding new features, these patterns are followed to create a future-proof API, which may not always be compatible with other build tools.
 
-## Прагматичный подход к производительности
+## A Pragmatic Approach to Performance
 
-Vite изначально ориентирован на производительность с момента [создания](./why.md). Архитектура dev-сервера позволяет сохранять быстрый HMR по мере роста проекта. Vite опирается на нативные инструменты, включая [цепочку Oxc](https://oxc.rs/) и [Rolldown](https://rolldown.rs/), для тяжёлых задач, а остальной код остаётся на JS — баланс скорости и гибкости. При необходимости плагины фреймворков подключают [Babel](https://babeljs.io/) для компиляции пользовательского кода. Благодаря совместимости Rolldown с плагинами Rollup у Vite есть доступ к большой экосистеме плагинов.
+Vite has been focused on performance since its [origins](./why.md). Its dev server architecture allows HMR that stays fast as projects scale. Vite is based on native tools that include the [Oxc toolchain](https://oxc.rs/) and [Rolldown](https://rolldown.rs/) to implement intensive tasks but keeps the rest of the code in JS to balance speed with flexibility. When needed, framework plugins will tap into [Babel](https://babeljs.io/) to compile user code. Thanks to Rolldown's Rollup plugin compatibility, Vite has access to a wide ecosystem of plugins.
 
-## Фреймворки поверх Vite
+## Building Frameworks on Top of Vite
 
-Хотя Vite можно использовать напрямую, он особенно хорош как основа для фреймворков. Ядро Vite не привязано к UI-фреймворку, но для каждого есть отлаженные плагины. [JS API](./api-javascript.md) позволяет авторам прикладных фреймворков использовать возможности Vite и давать пользователям нужный опыт. В Vite есть поддержка [примитивов SSR](./ssr.md), обычно встречающихся в инструментах более высокого уровня, но важных для современных веб-фреймворков. Плагины Vite дополняют картину возможностью делиться решениями между фреймворками. Vite также хорошо сочетается с [бэкенд-фреймворками](./backend-integration.md), например [Ruby](https://vite-ruby.netlify.app/) и [Laravel](https://laravel.com/docs/vite).
+Although Vite can be used by users directly, it shines as a tool to create frameworks. Vite core is framework agnostic, but there are polished plugins for each UI framework. Its [JS API](./api-javascript.md) allows App Framework authors to use Vite features to create tailored experiences for their users. Vite includes support for [SSR primitives](./ssr.md), usually present in higher-level tools but fundamental to building modern web frameworks. And Vite plugins complete the picture by offering a way to share between frameworks. Vite is also a great fit when paired with [Backend frameworks](./backend-integration.md) like [Ruby](https://vite-ruby.netlify.app/) and [Laravel](https://laravel.com/docs/vite).
 
-## Живая экосистема
+## An Active Ecosystem
 
-Развитие Vite — это совместная работа мейнтейнеров фреймворков и плагинов, пользователей и команды Vite. Мы призываем активно участвовать в разработке ядра Vite, когда проект переходит на Vite. Мы тесно работаем с ключевыми проектами экосистемы, чтобы уменьшать регрессии в каждом релизе; помогают инструменты вроде [vite-ecosystem-ci](https://github.com/vitejs/vite-ecosystem-ci): по выбранным PR запускается CI крупных проектов на Vite, и видно, как экосистема отреагирует на релиз. Мы стараемся устранять регрессии до того, как они дойдут до пользователей, и чтобы проекты могли обновляться сразу после выхода версий. Если вы работаете с Vite, приходите в [Discord Vite](https://chat.vite.dev) и присоединяйтесь к проекту.
+Vite evolution is a cooperation between framework and plugin maintainers, users, and the Vite team. We encourage active participation in Vite's Core development once a project adopts Vite. We work closely with the main projects in the ecosystem to minimize regressions on each release, aided by tools like [vite-ecosystem-ci](https://github.com/vitejs/vite-ecosystem-ci). It allows us to run the CI of major projects using Vite on selected PRs and gives us a clear status of how the Ecosystem would react to a release. We strive to fix regressions before they hit users and allow projects to update to the next versions as soon as they are released. If you are working with Vite, we invite you to join [Vite's Discord](https://chat.vite.dev) and get involved in the project too.

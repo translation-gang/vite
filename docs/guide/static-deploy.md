@@ -1,28 +1,27 @@
 <!--
-  READ THIS IF YOU WANT TO ADD A NEW DEPLOYMENT PLATFORM.
+  ПРОЧИТАЙТЕ ЭТО, ЕСЛИ ХОТИТЕ ДОБАВИТЬ НОВУЮ ПЛАТФОРМУ ДЕПЛОЯ.
 
-  Feel free to submit a PR that adds a new section with a link to your platform's
-  deployment guide, as long as it meets these criteria:
+  Можете прислать PR с новым разделом и ссылкой на руководство по деплою вашей платформы,
+  если оно соответствует критериям:
 
-  1. Users should be able to deploy their site for free.
-  2. Free tier offerings should host the site indefinitely and are not time-bound.
-     Offering a limited number of computation resource or site counts in exchange is fine.
-  3. The linked guides should not contain any malicious content.
+  1. Пользователи должны иметь возможность бесплатно задеплоить сайт.
+  2. Бесплатный тариф должен хостить сайт неограниченно по времени, без ограничения срока.
+     Ограничение по вычислительным ресурсам или числу сайтов — допустимо.
+  3. В связанных руководствах не должно быть вредоносного контента.
 
-  New sections should be added last in the file. Please reference the existing sections at
-  the bottom of this file for examples of how to format the new section.
+  Новые разделы добавляйте в конец файла. Ориентируйтесь на существующие разделы внизу файла.
 
-  The Vite team may change the criteria and audit the current list from time to time.
-  If a section is removed, we will ping the original PR authors before doing so.
+  Команда Vite может менять критерии и пересматривать список.
+  Перед удалением раздела мы свяжемся с авторами исходного PR.
 -->
 
-# Deploying a Static Site
+# Деплой статического сайта
 
-The following guides are based on some shared assumptions:
+Нижеприведённые руководства опираются на общие предположения:
 
-- You are using the default build output location (`dist`). This location [can be changed using `build.outDir`](/config/build-options.md#build-outdir), and you can extrapolate instructions from these guides in that case.
-- You are using npm. You can use equivalent commands to run the scripts if you are using Yarn or other package managers.
-- Vite is installed as a local dev dependency in your project, and you have setup the following npm scripts:
+- Используется каталог сборки по умолчанию (`dist`). Его [можно изменить через `build.outDir`](/config/build-options.md#build-outdir); тогда шаги из руководств нужно адаптировать.
+- Используется npm. При Yarn или другом менеджере пакетов используйте эквивалентные команды.
+- Vite установлен как локальная dev-зависимость, настроены такие npm-скрипты:
 
 ```json [package.json]
 {
@@ -33,33 +32,33 @@ The following guides are based on some shared assumptions:
 }
 ```
 
-It is important to note that `vite preview` is intended for previewing the build locally and not meant as a production server.
+Важно: `vite preview` предназначен для локального просмотра сборки, а не как production-сервер.
 
-::: tip NOTE
-These guides provide instructions for performing a static deployment of your Vite site. Vite also supports Server-Side Rendering. SSR refers to front-end frameworks that support running the same application in Node.js, pre-rendering it to HTML, and finally hydrating it on the client. Check out the [SSR Guide](./ssr) to learn about this feature. On the other hand, if you are looking for integration with traditional server-side frameworks, check out the [Backend Integration guide](./backend-integration) instead.
+::: tip ПРИМЕЧАНИЕ
+Здесь описан статический деплой сайта на Vite. Vite также поддерживает SSR — фронтенд-фреймворки, где одно приложение запускается в Node.js, пререндерится в HTML и затем гидратируется на клиенте. См. [руководство по SSR](./ssr). Для интеграции с классическими серверными фреймворками см. [интеграцию с бэкендом](./backend-integration).
 :::
 
-## Building the App
+## Сборка приложения
 
-You may run `npm run build` command to build the app.
+Соберите приложение командой `npm run build`.
 
 ```bash
 $ npm run build
 ```
 
-By default, the build output will be placed at `dist`. You may deploy this `dist` folder to any of your preferred platforms.
+По умолчанию результат попадёт в `dist`. Эту папку можно задеплоить на любую выбранную платформу.
 
-### Testing the App Locally
+### Локальная проверка
 
-Once you've built the app, you may test it locally by running `npm run preview` command.
+После сборки проверьте результат локально: `npm run preview`.
 
 ```bash
 $ npm run preview
 ```
 
-The `vite preview` command will boot up a local static web server that serves the files from `dist` at `http://localhost:4173`. It's an easy way to check if the production build looks OK in your local environment.
+`vite preview` поднимает локальный статический сервер и отдаёт файлы из `dist` по адресу `http://localhost:4173` — удобно убедиться, что production-сборка выглядит корректно.
 
-You may configure the port of the server by passing the `--port` flag as an argument.
+Порт задаётся флагом `--port`:
 
 ```json [package.json]
 {
@@ -69,41 +68,41 @@ You may configure the port of the server by passing the `--port` flag as an argu
 }
 ```
 
-Now the `preview` command will launch the server at `http://localhost:8080`.
+Тогда preview будет на `http://localhost:8080`.
 
 ## GitHub Pages
 
-1. **Update Vite Config**
+1. **Обновите конфиг Vite**
 
-   Set the correct `base` in `vite.config.js`.
+   Укажите верный `base` в `vite.config.js`.
 
-   If you are deploying to `https://<USERNAME>.github.io/`, or to a custom domain through GitHub Pages (eg. `www.example.com`), set `base` to `'/'`. Alternatively, you can remove `base` from the configuration, as it defaults to `'/'`.
+   Для `https://<USERNAME>.github.io/` или своего домена через GitHub Pages (например `www.example.com`) задайте `base: '/'` или уберите `base` (по умолчанию `'/'`).
 
-   If you are deploying to `https://<USERNAME>.github.io/<REPO>/` (eg. your repository is at `https://github.com/<USERNAME>/<REPO>`), then set `base` to `'/<REPO>/'`.
+   Для `https://<USERNAME>.github.io/<REPO>/` (репозиторий `https://github.com/<USERNAME>/<REPO>`) задайте `base: '/<REPO>/'`.
 
-2. **Enable GitHub Pages**
+2. **Включите GitHub Pages**
 
-   In your repository, go to **Settings → Pages**. Under **Build and deployment**, open the **Source** dropdown, and select **GitHub Actions**.
+   В репозитории: **Settings → Pages**. В **Build and deployment** в **Source** выберите **GitHub Actions**.
 
-   GitHub will now deploy your site using a GitHub Actions [workflow](https://docs.github.com/en/actions/concepts/workflows-and-actions/workflows), which is necessary since Vite requires a build step for deployment.
+   Деплой пойдёт через [workflow](https://docs.github.com/en/actions/concepts/workflows-and-actions/workflows) GitHub Actions — для Vite нужен шаг сборки.
 
-3. **Create a Workflow**
+3. **Создайте workflow**
 
-   Create a new file in your repository at `.github/workflows/deploy.yml`. You can also click on **“create your own”** from the previous step, which will generate a starter workflow file for you.
+   Файл `.github/workflows/deploy.yml`. Можно нажать **«create your own»** на предыдущем шаге — сгенерируется заготовка.
 
-   Here’s a sample workflow that installs dependencies with npm, builds the site, and deploys it whenever you push changes to the `main` branch:
+   Пример: npm, сборка и деплой при пуше в `main`:
 
    <<< ./static-deploy-github-pages.yaml#content [.github/workflows/deploy.yml]
 
-## GitLab Pages and GitLab CI
+## GitLab Pages и GitLab CI
 
-1. Set the correct `base` in `vite.config.js`.
+1. Укажите `base` в `vite.config.js`.
 
-   If you are deploying to `https://<USERNAME or GROUP>.gitlab.io/`, you can omit `base` as it defaults to `'/'`.
+   Для `https://<USERNAME or GROUP>.gitlab.io/` `base` можно не задавать (по умолчанию `'/'`).
 
-   If you are deploying to `https://<USERNAME or GROUP>.gitlab.io/<REPO>/`, for example your repository is at `https://gitlab.com/<USERNAME>/<REPO>`, then set `base` to `'/<REPO>/'`.
+   Для `https://<USERNAME or GROUP>.gitlab.io/<REPO>/` (репозиторий `https://gitlab.com/<USERNAME>/<REPO>`) задайте `base: '/<REPO>/'`.
 
-2. Create a file called `.gitlab-ci.yml` in the root of your project with the content below. This will build and deploy your site whenever you make changes to your content:
+2. В корне проекта создайте `.gitlab-ci.yml` ниже — сборка и деплой при изменениях:
 
    ```yaml [.gitlab-ci.yml]
    image: node:lts
@@ -131,48 +130,48 @@ Now the `preview` command will launch the server at `http://localhost:8080`.
 
 ### Netlify CLI
 
-1. Install the [Netlify CLI](https://docs.netlify.com/api-and-cli-guides/cli-guides/get-started-with-cli/) via `npm install -g netlify-cli`.
-2. Create a new site using `netlify init`.
-3. Deploy using `netlify deploy`.
+1. Установите [Netlify CLI](https://docs.netlify.com/api-and-cli-guides/cli-guides/get-started-with-cli/): `npm install -g netlify-cli`.
+2. Создайте сайт: `netlify init`.
+3. Деплой: `netlify deploy`.
 
-The Netlify CLI will share with you a preview URL to inspect. When you are ready to go into production, use the `prod` flag: `netlify deploy --prod`.
+CLI выдаст preview URL. Для production: `netlify deploy --prod`.
 
-### Netlify with Git
+### Netlify с Git
 
-1. Push your code to a git repository (GitHub, GitLab, BitBucket, Azure DevOps).
-2. [Import the project](https://app.netlify.com/start) to Netlify.
-3. Choose the branch, output directory, and set up environment variables if applicable.
-4. Click on **Deploy**.
-5. Your Vite app is deployed!
+1. Запушьте код в репозиторий (GitHub, GitLab, BitBucket, Azure DevOps).
+2. [Импортируйте проект](https://app.netlify.com/start) в Netlify.
+3. Выберите ветку, каталог вывода, при необходимости переменные окружения.
+4. Нажмите **Deploy**.
+5. Приложение задеплоено.
 
-After your project has been imported and deployed, all subsequent pushes to branches other than the production branch along with pull requests will generate [Preview Deployments](https://docs.netlify.com/deploy/deploy-types/deploy-previews/), and all changes made to the Production Branch (commonly “main”) will result in a [Production Deployment](https://docs.netlify.com/deploy/deploy-overview/#definitions).
+После импорта пуши в ветки, отличные от production, и pull request дают [Preview Deployments](https://docs.netlify.com/deploy/deploy-types/deploy-previews/); изменения в production-ветке (часто `main`) — [Production Deployment](https://docs.netlify.com/deploy/deploy-overview/#definitions).
 
 ## Vercel
 
 ### Vercel CLI
 
-1. Install the [Vercel CLI](https://vercel.com/cli) via `npm i -g vercel` and run `vercel` to deploy.
-2. Vercel will detect that you are using Vite and will enable the correct settings for your deployment.
-3. Your application is deployed! (e.g. [vite-vue-template.vercel.app](https://vite-vue-template.vercel.app/))
+1. Установите [Vercel CLI](https://vercel.com/cli): `npm i -g vercel`, затем `vercel`.
+2. Vercel определит Vite и подставит нужные настройки.
+3. Деплой готов (например [vite-vue-template.vercel.app](https://vite-vue-template.vercel.app/)).
 
-### Vercel with Git
+### Vercel с Git
 
-1. Push your code to your git repository (GitHub, GitLab, Bitbucket).
-2. [Import your Vite project](https://vercel.com/new) into Vercel.
-3. Vercel will detect that you are using Vite and will enable the correct settings for your deployment.
-4. Your application is deployed! (e.g. [vite-vue-template.vercel.app](https://vite-vue-template.vercel.app/))
+1. Запушьте код в репозиторий (GitHub, GitLab, Bitbucket).
+2. [Импортируйте проект Vite](https://vercel.com/new) в Vercel.
+3. Vercel настроит Vite автоматически.
+4. Деплой готов (например [vite-vue-template.vercel.app](https://vite-vue-template.vercel.app/)).
 
-After your project has been imported and deployed, all subsequent pushes to branches will generate [Preview Deployments](https://vercel.com/docs/concepts/deployments/environments#preview), and all changes made to the Production Branch (commonly “main”) will result in a [Production Deployment](https://vercel.com/docs/concepts/deployments/environments#production).
+После импорта пуши в ветки дают [Preview Deployments](https://vercel.com/docs/concepts/deployments/environments#preview), изменения в production-ветке — [Production Deployment](https://vercel.com/docs/concepts/deployments/environments#production).
 
-Learn more about Vercel’s [Git Integration](https://vercel.com/docs/concepts/git).
+Подробнее: [Git Integration](https://vercel.com/docs/concepts/git) у Vercel.
 
 ## Cloudflare
 
 ### Cloudflare Workers
 
-The [Cloudflare Vite plugin](https://developers.cloudflare.com/workers/vite-plugin/) provides integration with Cloudflare Workers and uses Vite's Environment API to run your server-side code in the Cloudflare Workers runtime during development.
+[Плагин Cloudflare Vite](https://developers.cloudflare.com/workers/vite-plugin/) интегрирует Workers и использует Environment API Vite, чтобы серверный код в dev шёл в рантайме Workers.
 
-To add Cloudflare Workers to an existing Vite project, install the plugin and add it to your config:
+Добавление Workers в существующий проект:
 
 ```bash
 $ npm install --save-dev @cloudflare/vite-plugin
@@ -193,33 +192,33 @@ export default defineConfig({
 }
 ```
 
-After running `npm run build`, your application can now be deployed with `npx wrangler deploy`.
+После `npm run build` деплой: `npx wrangler deploy`.
 
-You can also easily add backend APIs to your Vite application to securely communicate with Cloudflare resources. This runs in the Workers runtime during development and deploys alongside your frontend. See the [Cloudflare Vite plugin tutorial](https://developers.cloudflare.com/workers/vite-plugin/tutorial/) for a complete walkthrough.
+Бэкенд-API к приложению можно добавить для безопасной работы с ресурсами Cloudflare — в dev это Workers, вместе с фронтендом. См. [туториал по плагину](https://developers.cloudflare.com/workers/vite-plugin/tutorial/).
 
 ### Cloudflare Pages
 
-#### Cloudflare Pages with Git
+#### Cloudflare Pages с Git
 
-Cloudflare Pages gives you a way to deploy directly to Cloudflare without having to manage a Wrangler file.
+Cloudflare Pages деплоит без обязательного Wrangler-файла.
 
-1. Push your code to your git repository (GitHub, GitLab).
-2. Log in to the Cloudflare dashboard and select your account in **Account Home** > **Workers & Pages**.
-3. Select **Create a new Project** and the **Pages** option, then select Git.
-4. Select the git project you want to deploy and click **Begin setup**
-5. Select the corresponding framework preset in the build setting depending on the Vite framework you have selected. Otherwise enter your build commands for your project and your expected output directory.
-6. Then save and deploy!
-7. Your application is deployed! (e.g `https://<PROJECTNAME>.pages.dev/`)
+1. Запушьте код (GitHub, GitLab).
+2. В Cloudflare: **Account Home** > **Workers & Pages**.
+3. **Create a new Project** → **Pages** → Git.
+4. Выберите репозиторий → **Begin setup**
+5. В настройках сборки выберите пресет под ваш Vite-фреймворк или укажите команды и каталог вывода.
+6. Сохраните и задеплойте.
+7. Сайт доступен (например `https://<PROJECTNAME>.pages.dev/`).
 
-After your project has been imported and deployed, all subsequent pushes to branches will generate [Preview Deployments](https://developers.cloudflare.com/pages/platform/preview-deployments/) unless specified not to in your [branch build controls](https://developers.cloudflare.com/pages/platform/branch-build-controls/). All changes to the Production Branch (commonly "main") will result in a Production Deployment.
+Дальнейшие пуши в ветки дают [Preview Deployments](https://developers.cloudflare.com/pages/platform/preview-deployments/), если не отключено в [branch build controls](https://developers.cloudflare.com/pages/platform/branch-build-controls/). Изменения в production-ветке — production-деплой.
 
-You can also add custom domains and handle custom build settings on Pages. Learn more about [Cloudflare Pages Git Integration](https://developers.cloudflare.com/pages/get-started/#manage-your-site).
+Свои домены и настройки сборки: [Cloudflare Pages Git Integration](https://developers.cloudflare.com/pages/get-started/#manage-your-site).
 
 ## Google Firebase
 
-1. Install [firebase-tools](https://www.npmjs.com/package/firebase-tools) via `npm i -g firebase-tools`.
+1. Установите [firebase-tools](https://www.npmjs.com/package/firebase-tools): `npm i -g firebase-tools`.
 
-2. Create the following files at the root of your project:
+2. В корне проекта создайте файлы:
 
    ::: code-group
 
@@ -248,70 +247,64 @@ You can also add custom domains and handle custom build settings on Pages. Learn
 
    :::
 
-3. After running `npm run build`, deploy using the command `firebase deploy`.
+3. После `npm run build`: `firebase deploy`.
 
 ## Surge
 
-1. Install [surge](https://www.npmjs.com/package/surge) via `npm i -g surge`.
-2. Run `npm run build`.
-3. Deploy to surge by typing `surge dist`.
+1. Установите [surge](https://www.npmjs.com/package/surge): `npm i -g surge`.
+2. `npm run build`.
+3. `surge dist`.
 
-You can also deploy to a [custom domain](https://surge.sh/help/adding-a-custom-domain) by adding `surge dist yourdomain.com`.
+Свой домен: `surge dist yourdomain.com` — см. [custom domain](https://surge.sh/help/adding-a-custom-domain).
 
 ## Azure Static Web Apps
 
-You can quickly deploy your Vite app with Microsoft Azure [Static Web Apps](https://aka.ms/staticwebapps) service. You need:
+Быстрый деплой через Microsoft Azure [Static Web Apps](https://aka.ms/staticwebapps):
 
-- An Azure account and a subscription key. You can create a [free Azure account here](https://azure.microsoft.com/free).
-- Your app code pushed to [GitHub](https://github.com).
-- The [SWA Extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azurestaticwebapps) in [Visual Studio Code](https://code.visualstudio.com).
+- Аккаунт Azure и подписка. [Бесплатный аккаунт](https://azure.microsoft.com/free).
+- Код в [GitHub](https://github.com).
+- Расширение [SWA](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azurestaticwebapps) в [VS Code](https://code.visualstudio.com).
 
-Install the extension in VS Code and navigate to your app root. Open the Static Web Apps extension, sign in to Azure, and click the '+' sign to create a new Static Web App. You will be prompted to designate which subscription key to use.
+В VS Code: расширение Static Web Apps, вход в Azure, «+» для нового приложения, выбор подписки. В мастере — имя, пресет фреймворка, корень приложения (обычно `/`) и папка сборки `/dist`. Создастся GitHub Action в `.github`.
 
-Follow the wizard started by the extension to give your app a name, choose a framework preset, and designate the app root (usually `/`) and built file location `/dist`. The wizard will run and will create a GitHub action in your repo in a `.github` folder.
-
-The action will work to deploy your app (watch its progress in your repo's Actions tab) and, when successfully completed, you can view your app in the address provided in the extension's progress window by clicking the 'Browse Website' button that appears when the GitHub action has run.
+По завершении workflow откройте сайт из окна расширения (**Browse Website**).
 
 ## Render
 
-You can deploy your Vite app as a Static Site on [Render](https://render.com/).
+Статический сайт на [Render](https://render.com/):
 
-1. Create a [Render account](https://dashboard.render.com/register).
-
-2. In the [Dashboard](https://dashboard.render.com/), click the **New** button and select **Static Site**.
-
-3. Connect your GitHub/GitLab account or use a public repository.
-
-4. Specify a project name and branch.
+1. [Аккаунт Render](https://dashboard.render.com/register).
+2. В [Dashboard](https://dashboard.render.com/): **New** → **Static Site**.
+3. Подключите GitHub/GitLab или публичный репозиторий.
+4. Имя проекта и ветка.
    - **Build Command**: `npm install && npm run build`
    - **Publish Directory**: `dist`
+5. **Create Static Site**. URL вида `https://<PROJECTNAME>.onrender.com/`.
 
-5. Click **Create Static Site**. Your app should be deployed at `https://<PROJECTNAME>.onrender.com/`.
+Новые коммиты в ветку обычно запускают деплой. [Auto-Deploy](https://render.com/docs/deploys#toggling-auto-deploy-for-a-service) настраивается в проекте.
 
-By default, any new commit pushed to the specified branch will automatically trigger a new deployment. [Auto-Deploy](https://render.com/docs/deploys#toggling-auto-deploy-for-a-service) can be configured in the project settings.
-
-You can also add a [custom domain](https://render.com/docs/custom-domains) to your project.
+[Свой домен](https://render.com/docs/custom-domains) можно подключить отдельно.
 
 ## Flightcontrol
 
-Deploy your static site using [Flightcontrol](https://www.flightcontrol.dev/?ref=docs-vite) by following these [instructions](https://www.flightcontrol.dev/docs/reference/examples/vite?ref=docs-vite).
+Статический сайт на [Flightcontrol](https://www.flightcontrol.dev/?ref=docs-vite) — по [инструкции](https://www.flightcontrol.dev/docs/reference/examples/vite?ref=docs-vite).
 
 ## Kinsta Static Site Hosting
 
-Deploy your static site using [Kinsta](https://kinsta.com/static-site-hosting/) by following these [instructions](https://kinsta.com/docs/static-site-hosting/static-site-quick-start/react-static-site-examples/#react-with-vite).
+[Инструкция Kinsta](https://kinsta.com/docs/static-site-hosting/static-site-quick-start/react-static-site-examples/#react-with-vite) для [хостинга статики](https://kinsta.com/static-site-hosting/).
 
 ## xmit Static Site Hosting
 
-Deploy your static site using [xmit](https://xmit.co) by following this [guide](https://xmit.dev/posts/vite-quickstart/).
+[Руководство xmit](https://xmit.dev/posts/vite-quickstart/) для [xmit](https://xmit.co).
 
 ## Zephyr Cloud
 
-[Zephyr Cloud](https://zephyr-cloud.io) is a deployment platform that integrates directly into your build process and provides global edge distribution for module federation and other kind of applications.
+[Zephyr Cloud](https://zephyr-cloud.io) встраивается в процесс сборки и даёт глобальное edge-распространение для module federation и других сценариев.
 
-Zephyr follows a different approach than other cloud providers. It integrates directly with Vite build process, so every time you build or run the dev server for your application, it will be automatically deployed with Zephyr Cloud.
+В отличие от классических провайдеров, Zephyr связан с процессом сборки Vite: при `build` или `dev` приложение автоматически деплоится в Zephyr Cloud.
 
-Follow the steps in [the Vite deployment guide](https://docs.zephyr-cloud.io/bundlers/vite) to get started.
+Шаги: [руководство по деплою Vite](https://docs.zephyr-cloud.io/bundlers/vite).
 
 ## EdgeOne Pages
 
-Deploy your static site using [EdgeOne Pages](https://edgeone.ai/products/pages) by following these [instructions](https://pages.edgeone.ai/document/vite).
+Статический сайт на [EdgeOne Pages](https://edgeone.ai/products/pages) — по [инструкции](https://pages.edgeone.ai/document/vite).

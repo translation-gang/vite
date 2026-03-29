@@ -18,7 +18,7 @@ import { buildEnd } from './buildEnd.config'
 const viteVersion = vitePackageJson.version
 const viteMajorVersion = +viteVersion.split('.')[0]
 
-const ogDescription = 'Next Generation Frontend Tooling'
+const ogDescription = 'Инструментарий нового поколения для фронтенда'
 const ogImage = 'https://vite.dev/og-image.jpg'
 const ogTitle = 'Vite'
 const ogUrl = 'https://vite.dev'
@@ -40,9 +40,9 @@ const deployType = (() => {
 const additionalTitle = ((): string => {
   switch (deployType) {
     case 'main':
-      return ' (main branch)'
+      return ' (ветка main)'
     case 'local':
-      return ' (local)'
+      return ' (локально)'
     case 'release':
       return ''
   }
@@ -52,14 +52,14 @@ const versionLinks = (() => {
 
   if (deployType !== 'main') {
     links.push({
-      text: 'Unreleased Docs',
+      text: 'Документация (невыпущенная)',
       link: 'https://main.vite.dev',
     })
   }
 
   if (deployType === 'main' || deployType === 'local') {
     links.push({
-      text: `Vite ${viteMajorVersion} Docs (release)`,
+      text: `Документация Vite ${viteMajorVersion} (релиз)`,
       link: 'https://vite.dev',
     })
   }
@@ -67,7 +67,7 @@ const versionLinks = (() => {
   // Create version links from v2 onwards
   for (let i = viteMajorVersion - 1; i >= 2; i--) {
     links.push({
-      text: `Vite ${i} Docs`,
+      text: `Документация Vite ${i}`,
       link: `https://v${i}.vite.dev`,
     })
   }
@@ -88,7 +88,7 @@ function inlineScript(file: string): HeadConfig {
 
 const config = defineConfig({
   title: `Vite${additionalTitle}`,
-  description: 'Next Generation Frontend Tooling',
+  description: 'Инструментарий нового поколения для фронтенда',
   cleanUrls: true,
   sitemap: {
     hostname: 'https://vite.dev',
@@ -126,7 +126,7 @@ const config = defineConfig({
   ],
 
   locales: {
-    root: { label: 'English' },
+    root: { label: 'Русский' },
     zh: { label: '简体中文', link: 'https://cn.vite.dev' },
     ja: { label: '日本語', link: 'https://ja.vite.dev' },
     es: { label: 'Español', link: 'https://es.vite.dev' },
@@ -142,7 +142,7 @@ const config = defineConfig({
 
     banner: {
       id: 'viteplus-alpha',
-      text: 'Announcing Vite+ Alpha: Open source. Unified. Next-gen.',
+      text: 'Анонс Vite+ Alpha: open source. Единая платформа. Новое поколение.',
       url: 'https://voidzero.dev/posts/announcing-vite-plus-alpha?utm_source=vite&utm_content=top_banner',
     },
 
@@ -168,7 +168,7 @@ const config = defineConfig({
         // Должно совпадать с facet `tags` в индексе Algolia DocSearch для этого сайта (см. .github/CONTRIBUTING.md).
         placeholder: 'Поиск по документации',
         searchParameters: {
-          facetFilters: ['tags:en'],
+          facetFilters: ['tags:ru'],
         },
         translations: {
           button: {
@@ -218,29 +218,29 @@ const config = defineConfig({
     },
 
     footer: {
-      copyright: `© 2019-present VoidZero Inc. and Vite contributors. (${commitRef})`,
+      copyright: `© 2019–настоящее время VoidZero Inc. и участники Vite. (${commitRef})`,
       nav: [
         {
           title: 'Vite',
           items: [
-            { text: 'Guide', link: '/guide/' },
-            { text: 'Config', link: '/config/' },
-            { text: 'Plugins', link: '/plugins/' },
+            { text: 'Руководство', link: '/guide/' },
+            { text: 'Конфигурация', link: '/config/' },
+            { text: 'Плагины', link: '/plugins/' },
           ],
         },
         {
-          title: 'Resources',
+          title: 'Ресурсы',
           items: [
-            { text: 'Team', link: '/team' },
-            { text: 'Blog', link: '/blog' },
+            { text: 'Команда', link: '/team' },
+            { text: 'Блог', link: '/blog' },
             {
-              text: 'Releases',
+              text: 'Релизы',
               link: 'https://github.com/vitejs/vite/releases',
             },
           ],
         },
         {
-          title: 'Versions',
+          title: 'Версии',
           items: versionLinks,
         },
       ],
@@ -253,22 +253,22 @@ const config = defineConfig({
     },
 
     nav: [
-      { text: 'Guide', link: '/guide/', activeMatch: '/guide/' },
-      { text: 'Config', link: '/config/', activeMatch: '/config/' },
-      { text: 'Plugins', link: '/plugins/', activeMatch: '/plugins/' },
+      { text: 'Руководство', link: '/guide/', activeMatch: '/guide/' },
+      { text: 'Конфигурация', link: '/config/', activeMatch: '/config/' },
+      { text: 'Плагины', link: '/plugins/', activeMatch: '/plugins/' },
       {
-        text: 'Resources',
+        text: 'Ресурсы',
         items: [
-          { text: 'Team', link: '/team' },
-          { text: 'Blog', link: '/blog' },
-          { text: 'Releases', link: '/releases' },
-          { text: 'Acknowledgements', link: '/acknowledgements' },
+          { text: 'Команда', link: '/team' },
+          { text: 'Блог', link: '/blog' },
+          { text: 'Релизы', link: '/releases' },
+          { text: 'Благодарности', link: '/acknowledgements' },
           {
-            text: 'Plugin Registry',
+            text: 'Реестр плагинов',
             link: 'https://registry.vite.dev/plugins',
           },
           {
-            text: 'The Documentary',
+            text: 'Документальный фильм',
             link: 'https://www.youtube.com/watch?v=bmWQqAKLgT4',
           },
           {
@@ -286,7 +286,7 @@ const config = defineConfig({
                 link: 'https://x.com/vite_js',
               },
               {
-                text: 'Discord Chat',
+                text: 'Чат в Discord',
                 link: 'https://chat.vite.dev',
               },
               {
@@ -298,7 +298,7 @@ const config = defineConfig({
                 link: 'https://viteconf.org',
               },
               {
-                text: 'DEV Community',
+                text: 'Сообщество DEV',
                 link: 'https://dev.to/t/vite',
               },
             ],
@@ -309,11 +309,11 @@ const config = defineConfig({
         text: `v${viteVersion}`,
         items: [
           {
-            text: 'Changelog',
+            text: 'Журнал изменений',
             link: 'https://github.com/vitejs/vite/blob/main/packages/vite/CHANGELOG.md',
           },
           {
-            text: 'Contributing',
+            text: 'Участие в проекте',
             link: 'https://github.com/vitejs/vite/blob/main/CONTRIBUTING.md',
           },
           {
@@ -326,27 +326,27 @@ const config = defineConfig({
     sidebar: {
       '/guide/': [
         {
-          text: 'Introduction',
+          text: 'Введение',
           items: [
             {
-              text: 'Getting Started',
+              text: 'Начало работы',
               link: '/guide/',
             },
             {
-              text: 'Philosophy',
+              text: 'Философия',
               link: '/guide/philosophy',
             },
             {
-              text: 'Why Vite',
+              text: 'Зачем Vite',
               link: '/guide/why',
             },
           ],
         },
         {
-          text: 'Guide',
+          text: 'Руководство',
           items: [
             {
-              text: 'Features',
+              text: 'Возможности',
               link: '/guide/features',
             },
             {
@@ -354,57 +354,57 @@ const config = defineConfig({
               link: '/guide/cli',
             },
             {
-              text: 'Using Plugins',
+              text: 'Использование плагинов',
               link: '/guide/using-plugins',
             },
             {
-              text: 'Dependency Pre-Bundling',
+              text: 'Предсборка зависимостей',
               link: '/guide/dep-pre-bundling',
             },
             {
-              text: 'Static Asset Handling',
+              text: 'Статические ресурсы',
               link: '/guide/assets',
             },
             {
-              text: 'Building for Production',
+              text: 'Сборка для продакшена',
               link: '/guide/build',
             },
             {
-              text: 'Deploying a Static Site',
+              text: 'Деплой статического сайта',
               link: '/guide/static-deploy',
             },
             {
-              text: 'Env Variables and Modes',
+              text: 'Переменные окружения и режимы',
               link: '/guide/env-and-mode',
             },
             {
-              text: 'Server-Side Rendering (SSR)',
+              text: 'Серверный рендеринг (SSR)',
               link: '/guide/ssr',
             },
             {
-              text: 'Backend Integration',
+              text: 'Интеграция с бэкендом',
               link: '/guide/backend-integration',
             },
             {
-              text: 'Troubleshooting',
+              text: 'Устранение неполадок',
               link: '/guide/troubleshooting',
             },
             {
-              text: 'Performance',
+              text: 'Производительность',
               link: '/guide/performance',
             },
             {
-              text: `Migration from v${viteMajorVersion - 1}`,
+              text: `Миграция с v${viteMajorVersion - 1}`,
               link: '/guide/migration',
             },
             {
-              text: 'Breaking Changes',
+              text: 'Критические изменения',
               link: '/changes/',
             },
           ],
         },
         {
-          text: 'APIs',
+          text: 'API',
           items: [
             {
               text: 'Plugin API',
@@ -419,7 +419,7 @@ const config = defineConfig({
               link: '/guide/api-javascript',
             },
             {
-              text: 'Config Reference',
+              text: 'Справочник конфигурации',
               link: '/config/',
             },
           ],
@@ -428,23 +428,23 @@ const config = defineConfig({
           text: 'Environment API',
           items: [
             {
-              text: 'Introduction',
+              text: 'Введение',
               link: '/guide/api-environment',
             },
             {
-              text: 'Environment Instances',
+              text: 'Экземпляры окружений',
               link: '/guide/api-environment-instances',
             },
             {
-              text: 'Plugins',
+              text: 'Плагины',
               link: '/guide/api-environment-plugins',
             },
             {
-              text: 'Frameworks',
+              text: 'Фреймворки',
               link: '/guide/api-environment-frameworks',
             },
             {
-              text: 'Runtimes',
+              text: 'Рантаймы',
               link: '/guide/api-environment-runtimes',
             },
           ],
@@ -452,38 +452,38 @@ const config = defineConfig({
       ],
       '/config/': [
         {
-          text: 'Config',
+          text: 'Конфигурация',
           items: [
             {
-              text: 'Configuring Vite',
+              text: 'Настройка Vite',
               link: '/config/',
             },
             {
-              text: 'Shared Options',
+              text: 'Общие опции',
               link: '/config/shared-options',
             },
             {
-              text: 'Server Options',
+              text: 'Опции сервера',
               link: '/config/server-options',
             },
             {
-              text: 'Build Options',
+              text: 'Опции сборки',
               link: '/config/build-options',
             },
             {
-              text: 'Preview Options',
+              text: 'Опции preview',
               link: '/config/preview-options',
             },
             {
-              text: 'Dep Optimization Options',
+              text: 'Опции оптимизации зависимостей',
               link: '/config/dep-optimization-options',
             },
             {
-              text: 'SSR Options',
+              text: 'Опции SSR',
               link: '/config/ssr-options',
             },
             {
-              text: 'Worker Options',
+              text: 'Опции Worker',
               link: '/config/worker-options',
             },
           ],
@@ -491,40 +491,40 @@ const config = defineConfig({
       ],
       '/changes/': [
         {
-          text: 'Breaking Changes',
+          text: 'Критические изменения',
           link: '/changes/',
         },
         {
-          text: 'Current',
+          text: 'Текущие',
           items: [],
         },
         {
-          text: 'Future',
+          text: 'Будущие',
           items: [
             {
-              text: 'this.environment in Hooks',
+              text: 'this.environment в хуках',
               link: '/changes/this-environment-in-hooks',
             },
             {
-              text: 'HMR hotUpdate Plugin Hook',
+              text: 'Плагинный хук HMR hotUpdate',
               link: '/changes/hotupdate-hook',
             },
             {
-              text: 'Move to Per-environment APIs',
+              text: 'Переход к API по окружениям',
               link: '/changes/per-environment-apis',
             },
             {
-              text: 'SSR Using ModuleRunner API',
+              text: 'SSR через API ModuleRunner',
               link: '/changes/ssr-using-modulerunner',
             },
             {
-              text: 'Shared Plugins During Build',
+              text: 'Общие плагины при сборке',
               link: '/changes/shared-plugins-during-build',
             },
           ],
         },
         {
-          text: 'Past',
+          text: 'Прошлые',
           items: [],
         },
       ],
@@ -609,22 +609,22 @@ const config = defineConfig({
       }),
       llmstxt({
         ignoreFiles: ['blog/*', 'blog.md', 'index.md', 'team.md'],
-        description: 'The Build Tool for the Web',
+        description: 'Инструмент сборки для веба',
         details: `\
-- 💡 Instant Server Start
-- ⚡️ Lightning Fast HMR
-- 🛠️ Rich Features
-- 📦 Optimized Build
-- 🔩 Universal Plugin Interface
-- 🔑 Fully Typed APIs
+- 💡 Мгновенный старт dev-сервера
+- ⚡️ Молниеносный HMR
+- 🛠️ Богатый набор возможностей
+- 📦 Оптимизированная сборка
+- 🔩 Универсальный интерфейс плагинов
+- 🔑 Полностью типизированные API
 
-Vite is a new breed of frontend build tooling that significantly improves the frontend development experience. It consists of two major parts:
+Vite — новый тип инструментов сборки фронтенда, который заметно улучшает опыт разработки. Он состоит из двух крупных частей:
 
-- A dev server that serves your source files over [native ES modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules), with [rich built-in features](https://vite.dev/guide/features.md) and astonishingly fast [Hot Module Replacement (HMR)](https://vite.dev/guide/features.md#hot-module-replacement).
+- Dev-сервер, отдающий исходники через [нативные ES-модули](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules), с [встроенными возможностями](https://vite.dev/guide/features.md) и невероятно быстрым [горячим обновлением модулей (HMR)](https://vite.dev/guide/features.md#hot-module-replacement).
 
-- A [build command](https://vite.dev/guide/build.md) that bundles your code with [Rollup](https://rollupjs.org), pre-configured to output highly optimized static assets for production.
+- [Команда сборки](https://vite.dev/guide/build.md), которая бандлит код с помощью [Rollup](https://rollupjs.org), заранее настроенная на выдачу высокооптимизированных статических ресурсов для продакшена.
 
-In addition, Vite is highly extensible via its [Plugin API](https://vite.dev/guide/api-plugin.md) and [JavaScript API](https://vite.dev/guide/api-javascript.md) with full typing support.`,
+Кроме того, Vite легко расширяется через [Plugin API](https://vite.dev/guide/api-plugin.md) и [JavaScript API](https://vite.dev/guide/api-javascript.md) с полной поддержкой типов.`,
       }),
     ],
     optimizeDeps: {

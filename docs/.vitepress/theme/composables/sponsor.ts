@@ -96,17 +96,17 @@ export function useSponsor() {
 function mapSponsors(sponsors: Sponsors): SponsorTier[] {
   return [
     {
-      tier: 'in partnership with',
+      tier: 'в партнёрстве с',
       size: 'big' as const,
       items: viteSponsors['special'],
     },
     {
-      tier: 'Platinum Sponsors',
+      tier: 'Платиновые спонсоры',
       size: 'big' as const,
       items: mapImgPath(sponsors['platinum']),
     },
     {
-      tier: 'Gold Sponsors',
+      tier: 'Золотые спонсоры',
       size: 'medium' as const,
       items: [...mapImgPath(sponsors['gold']), ...viteSponsors['gold']],
     },

@@ -1,6 +1,6 @@
 ---
-title: Acknowledgements
-description: Vite is built upon the shoulders of giants. Thank you to all the projects and contributors that make Vite possible.
+title: Благодарности
+description: Vite стоит на плечах гигантов. Спасибо всем проектам и контрибьюторам, благодаря которым Vite существует.
 ---
 
 <script setup>
@@ -15,7 +15,7 @@ const allSponsors = computed(() => {
   if (!sponsorData.value) return []
   return [
     {
-      tier: 'Brought to you by',
+      tier: 'Представлено',
       size: 'big',
       items: [voidZero],
     },
@@ -28,53 +28,53 @@ function npmUrl(name) {
 }
 </script>
 
-# Acknowledgements
+# Благодарности
 
-Vite is built upon the shoulders of giants. We would like to express our gratitude to all the projects, contributors, and sponsors that make Vite possible.
+Vite стоит на плечах гигантов. Мы благодарим все проекты, контрибьюторов и спонсоров, благодаря которым Vite возможен.
 
-## Contributors
+## Контрибьюторы
 
-Vite is developed by an international team of contributors. See the [Team page](/team) to meet the core team members.
+Vite развивается международной командой контрибьюторов. На странице [Команда](/team) можно познакомиться с core team.
 
-We also thank all the [contributors on GitHub](https://github.com/vitejs/vite/graphs/contributors) who have helped improve Vite through code contributions, bug reports, documentation, and documentation translation.
+Также спасибо всем [контрибьюторам на GitHub](https://github.com/vitejs/vite/graphs/contributors), кто улучшал Vite кодом, баг-репортами, документацией и переводами документации.
 
-## Sponsors
+## Спонсоры
 
-Vite's development is supported by generous sponsors. You can support Vite through [GitHub Sponsors](https://github.com/sponsors/vitejs) or [Open Collective](https://opencollective.com/vite).
+Разработку Vite поддерживают щедрые спонсоры. Поддержать Vite можно через [GitHub Sponsors](https://github.com/sponsors/vitejs) или [Open Collective](https://opencollective.com/vite).
 
 <div class="sponsors-container">
   <VPSponsors :data="allSponsors" />
 </div>
 
-## Dependencies
+## Зависимости
 
-Vite depends on these amazing open source projects:
+Vite опирается на эти замечательные open source проекты:
 
-### Notable Dependencies
+### Заметные зависимости
 
 <div class="deps-list notable">
   <div v-for="dep in data.notableDependencies" :key="dep.name" class="dep-item">
     <div class="dep-header">
       <a :href="npmUrl(dep.name)" target="_blank" rel="noopener"><code>{{ dep.name }}</code></a>
       <span class="dep-links">
-        <a v-if="dep.repository" :href="dep.repository" target="_blank" rel="noopener" class="dep-link">Repo</a>
-        <a v-if="dep.funding" :href="dep.funding" target="_blank" rel="noopener" class="dep-link sponsor">Sponsor</a>
+        <a v-if="dep.repository" :href="dep.repository" target="_blank" rel="noopener" class="dep-link">Репозиторий</a>
+        <a v-if="dep.funding" :href="dep.funding" target="_blank" rel="noopener" class="dep-link sponsor">Спонсор</a>
       </span>
     </div>
     <p v-if="dep.author" class="dep-author">
-      by <a v-if="dep.authorUrl" :href="dep.authorUrl" target="_blank" rel="noopener">{{ dep.author }}</a><template v-else>{{ dep.author }}</template>
+      от <a v-if="dep.authorUrl" :href="dep.authorUrl" target="_blank" rel="noopener">{{ dep.author }}</a><template v-else>{{ dep.author }}</template>
     </p>
     <p v-if="dep.description">{{ dep.description }}</p>
   </div>
 </div>
 
-### Bundled Dependency Authors
+### Авторы встроенных зависимостей
 
 <table class="authors-table">
   <thead>
     <tr>
-      <th>Author</th>
-      <th>Packages</th>
+      <th>Автор</th>
+      <th>Пакеты</th>
     </tr>
   </thead>
   <tbody>
@@ -82,58 +82,58 @@ Vite depends on these amazing open source projects:
       <td>
         <a v-if="author.url" :href="author.url" target="_blank" rel="noopener">{{ author.name }}</a>
         <template v-else>{{ author.name }}</template>
-        <a v-if="author.funding" :href="author.funding" target="_blank" rel="noopener" class="sponsor-link">Sponsor</a>
+        <a v-if="author.funding" :href="author.funding" target="_blank" rel="noopener" class="sponsor-link">Спонсор</a>
       </td>
       <td>
         <template v-for="(pkg, index) in author.packages" :key="pkg.name">
-          <span class="pkg-item"><a :href="npmUrl(pkg.name)" target="_blank" rel="noopener"><code>{{ pkg.name }}</code></a><a v-if="pkg.funding" :href="pkg.funding" target="_blank" rel="noopener" class="sponsor-link">Sponsor</a></span><template v-if="index < author.packages.length - 1">, </template>
+          <span class="pkg-item"><a :href="npmUrl(pkg.name)" target="_blank" rel="noopener"><code>{{ pkg.name }}</code></a><a v-if="pkg.funding" :href="pkg.funding" target="_blank" rel="noopener" class="sponsor-link">Спонсор</a></span><template v-if="index < author.packages.length - 1">, </template>
         </template>
       </td>
     </tr>
   </tbody>
 </table>
 
-::: tip For package authors
-This section is automatically generated from the `author` and `funding` fields in each package's `package.json`. If you'd like to update how your package appears here, you can update these fields in your package.
+::: tip Для авторов пакетов
+Этот раздел генерируется автоматически из полей `author` и `funding` в `package.json` каждого пакета. Чтобы изменить отображение своего пакета, обновите эти поля в пакете.
 :::
 
-## Development Tools
+## Инструменты разработки
 
-Vite's development workflow is powered by these tools:
+Рабочий процесс разработки Vite поддерживают эти инструменты:
 
 <div class="deps-list notable">
   <div v-for="dep in data.devTools" :key="dep.name" class="dep-item">
     <div class="dep-header">
       <a :href="npmUrl(dep.name)" target="_blank" rel="noopener"><code>{{ dep.name }}</code></a>
       <span class="dep-links">
-        <a v-if="dep.repository" :href="dep.repository" target="_blank" rel="noopener" class="dep-link">Repo</a>
-        <a v-if="dep.funding" :href="dep.funding" target="_blank" rel="noopener" class="dep-link sponsor">Sponsor</a>
+        <a v-if="dep.repository" :href="dep.repository" target="_blank" rel="noopener" class="dep-link">Репозиторий</a>
+        <a v-if="dep.funding" :href="dep.funding" target="_blank" rel="noopener" class="dep-link sponsor">Спонсор</a>
       </span>
     </div>
     <p v-if="dep.author" class="dep-author">
-      by <a v-if="dep.authorUrl" :href="dep.authorUrl" target="_blank" rel="noopener">{{ dep.author }}</a><template v-else>{{ dep.author }}</template>
+      от <a v-if="dep.authorUrl" :href="dep.authorUrl" target="_blank" rel="noopener">{{ dep.author }}</a><template v-else>{{ dep.author }}</template>
     </p>
     <p v-if="dep.description">{{ dep.description }}</p>
   </div>
 </div>
 
-## Past Notable Dependencies
+## Бывшие заметные зависимости
 
-We also thank the maintainers of these projects that Vite used in previous versions:
+Спасибо мейнтейнерам проектов, которые Vite использовал в прошлых версиях:
 
 <table>
   <thead>
     <tr>
-      <th>Package</th>
-      <th>Description</th>
-      <th>Links</th>
+      <th>Пакет</th>
+      <th>Описание</th>
+      <th>Ссылки</th>
     </tr>
   </thead>
   <tbody>
     <tr v-for="dep in data.pastNotableDependencies" :key="dep.name">
       <td><a :href="npmUrl(dep.name)" target="_blank" rel="noopener"><code>{{ dep.name }}</code></a></td>
       <td>{{ dep.description }}</td>
-      <td><a :href="dep.repository" target="_blank" rel="noopener">Repo</a></td>
+      <td><a :href="dep.repository" target="_blank" rel="noopener">Репозиторий</a></td>
     </tr>
   </tbody>
 </table>

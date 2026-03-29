@@ -21,21 +21,21 @@ const { data: sponsors } = useSponsor()
     :logos="['openai', 'shopify', 'stripe', 'linear', 'clickup', 'wiz']"
   />
   <HeadingSection
-    heading="Redefining developer experience"
-    subheading="Vite makes web development enjoyable again"
+    heading="Переосмысливаем опыт разработки"
+    subheading="Vite снова делает веб-разработку приятной"
   />
   <ViteFeatureGrid1 />
-  <HeadingSection heading="A shared foundation to build upon" />
+  <HeadingSection heading="Общая основа для ваших проектов" />
   <ViteFeatureGrid2 />
-  <HeadingSection heading="Powering your favorite frameworks and tools" />
+  <HeadingSection heading="Питает ваши любимые фреймворки и инструменты" />
   <ViteFrameworks />
   <ViteCommunity />
   <Sponsors :sponsors="sponsors" />
   <Spacer />
   <Footer
-    heading="Start building with Vite"
-    subheading="Prepare for a development environment that can finally keep pace with the speed of your mind."
-    button-text="Get Started"
+    heading="Начните собирать проекты с Vite"
+    subheading="Подготовьтесь к среде разработки, которая наконец поспевает за скоростью ваших идей."
+    button-text="Начать"
     button-link="/guide/"
   />
 </template>

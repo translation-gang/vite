@@ -3,6 +3,6 @@
     href="/guide/api-environment#environments-configuration"
     class="ignore-header"
   >
-    <Badge type="info" text="non-inherit" />
+    <Badge type="info" text="не наследуется" />
   </a>
 </template>

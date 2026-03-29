@@ -1,53 +1,53 @@
-# Plugins
+# Плагины
 
-:::tip NOTE
-Vite aims to provide out-of-the-box support for common web development patterns. Before searching for a Vite or Compatible Rollup plugin, check out the [Features Guide](../guide/features.md). A lot of the cases where a plugin would be needed in a Rollup project are already covered in Vite.
+:::tip ПРИМЕЧАНИЕ
+Vite стремится поддерживать из коробки распространённые паттерны веб-разработки. Прежде чем искать плагин Vite или совместимый с Rollup, загляните в [руководство по возможностям](../guide/features.md). Много случаев, где в проекте на Rollup нужен был бы плагин, в Vite уже покрыты.
 :::
 
-Check out [Using Plugins](../guide/using-plugins) for information on how to use plugins.
+Как пользоваться плагинами — в разделе [Использование плагинов](../guide/using-plugins).
 
-## Official Plugins
+## Официальные плагины
 
 ### [@vitejs/plugin-vue](https://github.com/vitejs/vite-plugin-vue/tree/main/packages/plugin-vue)
 
-Provides Vue 3 Single File Components support.
+Поддержка однофайловых компонентов Vue 3.
 
 ### [@vitejs/plugin-vue-jsx](https://github.com/vitejs/vite-plugin-vue/tree/main/packages/plugin-vue-jsx)
 
-Provides Vue 3 JSX support (via [dedicated Babel transform](https://github.com/vuejs/babel-plugin-jsx)).
+Поддержка JSX во Vue 3 (через [отдельную трансформацию Babel](https://github.com/vuejs/babel-plugin-jsx)).
 
 ### [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react)
 
-Provides React Fast Refresh support via [Oxc Transformer](https://oxc.rs/docs/guide/usage/transformer).
+Поддержка React Fast Refresh через [Oxc Transformer](https://oxc.rs/docs/guide/usage/transformer).
 
 ### [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react-swc)
 
-Replaces Oxc with [SWC](https://swc.rs/) during development for SWC plugin usage. During production builds, SWC+Oxc Transformer are used when using plugins. For big projects that require custom plugins, cold start and Hot Module Replacement (HMR) can be significantly faster, if the plugin is also available for SWC.
+В режиме разработки Oxc заменяется на [SWC](https://swc.rs/) для использования плагинов SWC. При production-сборке при наличии плагинов используются SWC и Oxc Transformer. В крупных проектах с пользовательскими плагинами холодный старт и горячая замена модулей (HMR) могут быть заметно быстрее, если плагин также доступен для SWC.
 
 ### [@vitejs/plugin-rsc](https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-rsc)
 
-Vite supports [React Server Components (RSC)](https://react.dev/reference/rsc/server-components) through the plugin. It utilizes the [Environment API](/guide/api-environment) to provide low-level primitives that React frameworks can use to integrate RSC features. You can try a minimal standalone RSC application with:
+Vite поддерживает [React Server Components (RSC)](https://react.dev/reference/rsc/server-components) через этот плагин. Используется [Environment API](/guide/api-environment), чтобы дать низкоуровневые примитивы, которыми могут пользоваться React-фреймворки для интеграции RSC. Минимальное автономное RSC-приложение можно попробовать так:
 
 ```bash
 npm create vite@latest -- --template rsc
 ```
 
-Read the [plugin documentation](https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-rsc) to learn more.
+Подробнее — в [документации плагина](https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-rsc).
 
 ### [@vitejs/plugin-legacy](https://github.com/vitejs/vite/tree/main/packages/plugin-legacy)
 
-Provides legacy browsers support for the production build.
+Поддержка устаревших браузеров в production-сборке.
 
-## Community Plugins
+## Плагины сообщества
 
-Check out [Vite Plugin Registry](https://registry.vite.dev/plugins) for the list of plugins published to npm.
+Список плагинов, опубликованных в npm — в [реестре плагинов Vite](https://registry.vite.dev/plugins).
 
-## Rolldown Builtin Plugins
+## Встроенные плагины Rolldown
 
-Vite uses [Rolldown](https://rolldown.rs/) under the hood and it provides a few builtin plugins for common use cases.
+Под капотом Vite использует [Rolldown](https://rolldown.rs/) и предоставляет несколько встроенных плагинов для типовых сценариев.
 
-Read the [Rolldown Builtin Plugins section](https://rolldown.rs/builtin-plugins/) for more information.
+Подробнее — в [разделе встроенных плагинов Rolldown](https://rolldown.rs/builtin-plugins/).
 
-## Rolldown / Rollup Plugins
+## Плагины Rolldown / Rollup
 
-[Vite plugins](../guide/api-plugin) are an extension of Rollup's plugin interface. Check out the [Rollup Plugin Compatibility section](../guide/api-plugin#rolldown-plugin-compatibility) for more information.
+[Плагины Vite](../guide/api-plugin) расширяют интерфейс плагинов Rollup. Дополнительно — [раздел о совместимости с плагинами Rollup](../guide/api-plugin#rolldown-plugin-compatibility).

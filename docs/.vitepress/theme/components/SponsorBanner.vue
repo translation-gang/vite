@@ -449,16 +449,16 @@ function dismiss() {
       </defs>
     </svg>
     <div class="vt-banner-text">
-      <p style="display: inline-block">The Unified Toolchain for the Web</p>
+      <p style="display: inline-block">Единая цепочка инструментов для веба</p>
       <a
         target="_blank"
         class="vt-primary-action"
         href="https://voidzero.dev/posts/announcing-vite-plus?utm_source=vite&utm_content=top_banner"
       >
-        Learn more
+        Подробнее
       </a>
     </div>
-    <button aria-label="close" @click="dismiss">
+    <button aria-label="закрыть" @click="dismiss">
       <svg
         class="close"
         xmlns="http://www.w3.org/2000/svg"
